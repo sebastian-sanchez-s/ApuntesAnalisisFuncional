@@ -1,0 +1,559 @@
+\documentclass[11pt]{article}
+
+% Page set up
+\usepackage[margin=3cm]{geometry}
+
+% Document font and symbols
+%\usepackage{mathptmx} % Times New Roman
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage{esint}
+
+% Language formatting
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish, es-noshorthands]{babel}
+
+% Graph and Drawings
+\usepackage{tikz,tikz-cd,float}
+\usepackage{wrapfig}
+\usetikzlibrary{babel}
+\usepackage{pgfplots}
+\usepackage[framemethod=default]{mdframed}
+\usepackage{framed}
+
+% Tools
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{etoolbox,mathtools}
+\usepackage[shortlabels]{enumitem}
+
+% Mdframed template
+\mdfsetup{innertopmargin=5pt,%
+	frametitlealignment=\raggedright,%
+	frametitlefont=\texttt,%
+	linewidth=2pt,%
+	topline=false,rightline=false, bottomline=false,%
+	frametitleaboveskip=\dimexpr-1\ht\strutbox\relax,}
+
+% Problem Env
+\newcounter{ProblemCounter}
+\newenvironment{Problema}[1][]{%
+	\vspace{1em}
+	\refstepcounter{ProblemCounter}
+    \noindent\texttt{PROBLEMA}~\theProblemCounter~
+	}{
+	\ \newline
+	}
+
+% Solution Env
+\newenvironment{Solucion}[1][]
+{%
+    \newline
+	\noindent{\ttfamily SOLUCIÓN}~
+}%
+{%
+	%\hfill\(\blacksquare\)
+}
+
+% Resize abs and norm
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\|}{\|}
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
+% Shortcuts
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+
+% Header
+\newcommand{\header}[2]
+{
+\begin{minipage}{.15\textwidth}
+	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{LogoUC}
+\end{minipage}
+\hspace{1em}
+\begin{minipage}{.75\textwidth}
+	\vspace{2em}
+	{\scshape
+	Pontificia Universidad Católica de Chile\\
+	Facultad de Matemáticas\\
+	Docente: Nikola Kamburov\\
+	Ayudante: Matías Díaz
+	}
+\end{minipage}
+
+\medskip
+
+\begin{center}
+	{\textbf{MAT2555 {-} Análisis Funcional}} \\[1ex]
+	{{\large Tarea #1 {-} Omar Neyra, Sebastián Sánchez}}
+\end{center}
+
+\medskip
+}
+
+\begin{document}
+
+\header{1}{}
+
+% Problema 1
+\begin{Problema}
+  Sea \(\Omega \subset \R^n\) abierto y \(\alpha \in (0,1]\). Para \(f\colon \Omega\to \K\),
+  define su \textit{norma de Hölder}
+  \begin{displaymath}
+    \norm{f}_{C^{\alpha}}
+    \coloneqq
+    \sup_{x\in\Omega} \abs{f(x)}
+    +
+    \sup_{x\ne y \in \Omega}
+    \frac{\abs{f(x) - f(y)}}{\abs{x-y}^{\alpha}}.
+  \end{displaymath}
+  El espacio \(C^{\alpha}(\Omega) \coloneqq \lbrace f\colon \Omega \to \K \mid 
+  \norm{f}_{C^{\alpha}} < \infty \rbrace\)
+  se llama el \textit{espacio de Hölder} de funciones en \(\Omega\), de exponente
+  \(\alpha\). Demuestre que \((C^{\alpha}(\Omega), \norm{\cdot}_{C^{\alpha}})\) es
+  un espacio de Banach.
+\end{Problema}
+\begin{Solucion}
+Sea \((f_n)_{n\in\N}\) usa sucesión de Cauchy en \(X = C^{\alpha}(\Omega)\).
+Debemos probar que su límite está en \(X\).
+
+\underline{Candidato a límite}: En primer lugar, notemos que fijado
+\(x\in\Omega\) tenemos que la sucesión \((f_n(x))_{n\in\N}\) es Cauchy
+en \(\K\). En efecto,
+\begin{displaymath}
+    \abs{f_n(x) - f_m(x)}
+    \le
+    \sup_{x\in\Omega} \abs{f_n(x) - f_m(x)}
+    \le
+    \norm{f_n - f_m}_{X}
+    \to 0
+\end{displaymath}
+para \(m,n\) suficientemente grandes. Así, el candidato a límite es:
+\begin{displaymath}
+    f(x) = \lim_{n\to\infty} f_n(x).
+\end{displaymath}
+
+\underline{Pertenencia del límite:} Usando la definición de \(f\) y la continuidad de \(\abs{\cdot}\)
+tenemos:
+\begin{align*}
+    \norm{f}_{X}
+    &=
+    \sup_{x\in\Omega} \abs{f(x)}
+    +
+    \sup_{x\ne y\in \Omega}
+    \frac
+        { \abs{f(x) - f(y)} }
+        { \abs{x - y} }
+    \\&=
+    \sup_{x\in\Omega} \lim_{n\to\infty} \abs{f_n(x)}
+    +
+    \sup_{x\ne y\in \Omega}
+    \lim_{n\to\infty}
+    \frac
+        { \abs{f_n(x) - f_n(y)} }
+        { \abs{x - y} }
+\end{align*}
+Usando propiedades de supremo y límites nos queda:
+\begin{displaymath}
+    \norm{f}_{X}
+    \le
+    \liminf_{n\to\infty} 
+    \left(
+    \sup_{x\in\Omega} \abs{f_n(x)}
+    +
+    \sup_{x\ne y\in \Omega}
+    \frac
+        { \abs{f_n(x) - f_n(y)} }
+        { \abs{x - y}^{\alpha} }
+    \right)
+\end{displaymath}
+
+\underline{Covergencia:} Finalmente, queda probar que \(f_n \to f\)
+en norma \(\norm{\cdot}_{\infty}\). En efecto, usando el cálculo de la 
+parte anterior tenemos:
+\begin{displaymath}
+    \norm{f - f_n}_{X}
+    \le
+    \liminf_{k\to\infty}
+    \left(
+    \sup_{x\in\Omega} \abs{f_k(x) - f_n(x)}
+    +
+    \sup_{x\ne y\in \Omega}
+    \frac
+        { \abs{f_k(x) - f_n(x) + f_n(y) - f_k(y)} }
+        { \abs{x - y}^{\alpha} }
+    \right)
+\end{displaymath}
+Aplicando desigualdad triangular en el último sumando y tomando
+un \(n\) suficientemente grande tenemos que cada sumando se va a \(0\).
+Concluyéndose lo buscado.
+\end{Solucion}
+
+% Problema 2
+\begin{Problema}
+  Considere el espacio 
+  \begin{displaymath}
+    c_0(\K) \coloneqq
+    \lbrace 
+    (a_k)_{k\in\N} \text{ en } \ell^{\infty}(\K)
+    \colon
+    \lim_{k\to\infty} a_k = 0
+    \rbrace.
+  \end{displaymath}
+  \begin{enumerate}[(a)]
+    \item Demuestre que \(c_0(\K)\) es cerrado en \(\ell^{\infty}(\K)\). 
+    Concluya que \(c_0(\K)\) es un espacio de Banach. 
+
+    \item Sea \(V\) el espacio cociente \(V = \ell^{\infty}/c_0\) con la norma
+    inducida
+    \begin{displaymath}
+      \norm{[v]} = \inf_{w\in c_0} \norm{v + w}_{\ell^{\infty}}.
+    \end{displaymath}
+    Demuestre que \(\norm{[v]} = \limsup_{k\to\infty} \abs{a_k}\). 
+  \end{enumerate}
+\end{Problema}
+\begin{Solucion}
+  \framebox{(a)} Sea \(a = (a_k)_{k}\) en \(\ell^{\infty}\) tal que 
+  \((a^{m})_{m} \to a\). Debemos probar que \(a\in c_0\). Observemos 
+  que
+  \begin{displaymath}
+    \abs{a_k}
+    = 
+    \abs{a_k - a^{m}_{k}}
+    + 
+    \abs{a^m_k}.
+  \end{displaymath}
+  El primer sumando satisface
+  \begin{displaymath}
+    \abs{a_k - a^{m}_{k}}
+    \le
+    \sup_{k} \abs{a_k - a^{m}_{k}}
+    = \norm{a - a^{m}}_{\ell^{\infty}}
+    \xrightarrow{m\to\infty} 0
+  \end{displaymath}
+  pues \(a^{m} \to a\). Por otro lado,
+  \(
+    \abs{a^m_k} \to 0
+  \) 
+  pues \(a^m \in c_0\).
+  Con ambas convergencias se sigue el resultado.
+  
+  \framebox{(b)}
+  Expandamos la definición de la norma cociente:
+  \begin{displaymath}
+    \norm{[v]}
+    = \inf_{w\in c_0} \norm{v + w}_{\ell^{\infty}}
+    = \inf_{w\in c_0}\, \sup_{k\in\N}\, \abs{v_k + w_k}
+  \end{displaymath}
+  En particular, para \(w^{n} = (-v_1, -v_2, \dots, -v_n, 0, 0, \dots, 0)\in c_0\)
+  se tiene que
+  \begin{displaymath}
+    \norm{[v]}
+    \le
+    \sup_{k>n}\, \abs{v_k}
+    \Rightarrow
+    \norm{[v]}
+    \le
+    \inf_{n} \sup_{k>n}\, \abs{v_k}
+    =
+    \limsup_{k\to\infty} \abs{v_k}.
+  \end{displaymath}
+
+  La otra desigualdad es directa:
+  \begin{displaymath}
+    \inf_{n} \sup_{k>n}\, \abs{v_k}
+    \le
+    \inf_{n} \sup_{k} \, \abs{v_k + w_k}
+    \le
+    \norm{[v]}.
+  \end{displaymath}
+  
+
+\end{Solucion}
+
+\begin{Problema}
+  De un ejemplo de una sucesión \(a = (a_k)_{k\in\N}, a_k\in \C\)
+  que,
+  \begin{enumerate}[(a)]
+      \item
+      converge en \(\ell^{\infty}\), pero no en \(\ell^{1}\);
+      \item
+      converge en \(\ell^{2}\), pero no en \(\ell^{1}\);
+      \item
+      converge en \(c_0\), pero no en \(\ell^{2}\).
+  \end{enumerate}
+\end{Problema}
+\begin{Solucion}
+  \framebox{(a)} Definir \(a = (a_k)_k = (e^{ik})_k\). Luego, 
+  \(\norm{a}_{\ell^{\infty}} = 1\) y \(\norm{a}_{\ell^{1}} \to \infty\).
+
+  \framebox{(b)} Considerar \(a = (a_k)_k = (1/k)_k\). Luego,
+  \(\norm{a}_{\ell^{2}} < \infty\) y \(\norm{a}_{\ell^{1}} \to \infty\). 
+
+  \framebox{(c)} Considerar \(a = (a_k)_k = (1/\sqrt{k})_{k}\). Luego,
+  \(\norm{a}_{\ell^{2}} \to \infty\) y \(\norm{a}_{\ell^{\infty}} \le 1\)
+  y \(a_k \to 0\). 
+\end{Solucion}
+
+% Problema 4
+\begin{Problema}
+  Sea \((V,\norm{\cdot})\) un espacio de Banach.
+  \begin{enumerate}
+    \item Pruebe que si 
+      \(
+        F_k 
+        \coloneqq \overline{B}_{r_k}(v_k) 
+        \coloneqq \left\{ v\in V \colon \norm{v-v_k} \le r_k \right\}
+      \)
+      , \(k\in\N\), son bolas cerradas, tales que
+      \(F_{k} \supseteq F_{k+1} \forall k\in \N\),
+      entonces \(\bigcap_{k} F_k \ne \varnothing\). 
+      
+    \item ¿Es posible tener conjuntos cerrados \(F_k\), tales que 
+      \(F_k \supseteq F_{k+1}\) y \(\bigcap_{k} F_k = \varnothing\)?  
+  \end{enumerate}
+\end{Problema}
+\begin{Solucion}
+\begin{enumerate}[(a)]
+  \item
+  En primer lugar, notemos que si los radios se estancan (es decir,
+  \(r_k = r_{j}\) para todo \(j\ge k\) y \(k\) fijo) entonces necesariamente
+  \(v_k = v_{j}\) para todo \(k\ge k\) y por lo tanto la intersección
+  de todos es no vacía (\(v_k\) está en todos). 
+
+  Por otro lado, si los radios no se estancan, necesariamente deben ir
+  decreciendo, es decir, \(r_k \downarrow c\).
+  Mostraremos que la sucesión de los centros \((v_k)_{k}\) es Cauchy.
+
+  En efecto, sea \(\epsilon > 0\). Luego, existe \(k\) tal que 
+  \(r_k - c < 2^{-k} \epsilon\). Sea \(j > k\), luego,
+  \begin{displaymath}
+    \norm{v_k - v_{j}} 
+    \le
+    \sum_{i=k}^{j-1} \norm{v_i - v_{i+1}}
+    \le
+    \sum_{i=k}^{j-1} \epsilon 2^{-i}
+    =
+    \frac{1}{2^{k-1}} - \frac{1}{2^{j-1}}
+    \to 0
+  \end{displaymath}
+  Así, la sucesión \((v_k)_k\) es Cauchy y como \(V\) es Banach,
+  el límite existe. Se sigue que \(v = \lim_{k\to\infty} v_k\) está en
+  la intersección.
+
+  \item
+  Basta considerar \(F_k = \varnothing\) para todo \(k\).
+\end{enumerate}
+\end{Solucion}
+
+% Problema 5
+\begin{Problema}
+  Sea \(V\) un espacio normado y sea \(l\) un funcional lineal acotado
+  no cero en \(V\). Considere el espacio nulo de \(l\):
+  \begin{displaymath}
+    L = \left\{ v \in V \colon l(v) = 0 \right\}.
+  \end{displaymath}
+
+  \begin{enumerate}[(a)]
+    \item
+    Demuestre que
+    \begin{displaymath}
+      \abs{l(v)} = \norm{l} d(v,L)
+      \text{ para todo} v\in V,
+    \end{displaymath}
+    donde \(d(v,L) \coloneqq \inf_{w\in L} \norm{v-w}\) es la distancia 
+    entre \(v\) y \(L\).
+
+    \item
+    Pruebe que si existen \(v\in V\setminus L\), \(w\in L\),
+    tal que \(\norm{v-w} = d(v,L)\), entonces \(l\) alcanza su
+    norma en la esfera unitaria \(\left\{ x\in V\colon \norm{x} = 1 \right\}.\) 
+  \end{enumerate}
+\end{Problema}
+\begin{Solucion}
+\begin{enumerate}[(a)]
+  \item 
+  Para una desigualdad, notemos que:
+  \begin{displaymath}
+    \abs{l(v)} 
+    = \abs{l(v - w + w)}
+    = \abs{l(v-w)}
+    \le \norm{l} \norm{v-w},
+  \end{displaymath}
+  dado que la desigualdad vale para todo \(w\), basta tomar el ínfimo
+  para que se siga el resultado. Para la otra dirección, supongamos que
+  \(\abs{l(v)} > \norm{l} d(v,L)\). Como \(0 \in L\) (pues \(l\) es un
+  funcional lineal), se sigue que
+  \begin{displaymath}
+    \abs{l(v)} > \norm{l} d(v,L) \ge \norm{l} \norm{v},
+  \end{displaymath}
+  contradiciendo que \(l\) sea un funcional lineal acotado. 
+  
+  \item
+  Sean \(v\) y \(w\) como en el enunciado. Definamos
+  \(u = (v-w)/\norm{v-w} = (v-w)/d(v,L)\). Por la parte
+  anterior se tiene que
+  \begin{displaymath}
+    \abs{l(u)} 
+    = \norm{l} d(u,L)
+    = \norm{l},
+  \end{displaymath}
+  pues
+  \begin{displaymath}
+    d(u,L)
+    = \inf_{w'\in L} \norm{u - w'}
+    = \frac{1}{d(v,L)} \inf_{w'\in L} \norm{v - w'}
+    = \frac{d(v,L)}{d(v,L)} = 1.
+  \end{displaymath}
+\end{enumerate}
+\end{Solucion}
+
+% Problema 6
+\begin{Problema}
+  Sean \(V,W\) espacios de Banach, \(T \in B(V,W)\), \(\alpha \in (0,1)\) y 
+  \(\beta > 0\). Supongamos que para todo \(w\in W\), existe \(v\in V\) tal
+  que \(\norm{v} \le \beta \norm{w}\) y
+  \begin{displaymath}
+    \norm{Tv - w} \le \alpha \norm{w}.
+  \end{displaymath}
+  Pruebe que para todo \(w\in W\) dado, la ecuación \(Tv = w\) tiene una
+  solución \(v\in V\) con \(\norm{v} \le \beta/(1-\alpha)\,\norm{w}\).
+\end{Problema}
+\begin{Solucion}
+  Sea \(v_0\) el vector asociado con \(w\) según el enunciado. Luego,
+  \begin{displaymath}
+    \norm{v_0} \le \beta \norm{w}
+    \text{ y }
+    \norm{Tv_0 - w} \le \alpha \norm{w}.
+  \end{displaymath}
+  Consideremos \(v_1\) el vector asociado a \(w_1 = Tv_0-w\). Luego,
+  \begin{displaymath}
+    \norm{v_1} \le \beta \norm{Tv_0-w}
+    \text{ y }
+    \norm{Tv_1 - (Tv_0 - w)}
+    \le \alpha \norm{Tv_0-w}.
+  \end{displaymath}
+  Descomponiendo todo para dejarlo en términos de \(w\) tenemos que
+  \begin{displaymath}
+    \norm{v_1} \le \beta \alpha \norm{w}
+    \text{ y }
+    \norm{Tv_1 - w_1} \le \alpha^2 \norm{w}
+  \end{displaymath}
+  Ahora consideremos \(v_2\) el vector asociado a \(w_2 = Tv_1 - w_1\). Se sigue
+  que
+  \begin{displaymath}
+    \norm{v_2} \le \beta \alpha^2 \norm{w}
+    \text{ y }
+    \norm{Tv_2 - w_2} \le \alpha^{3} \norm{w}.
+  \end{displaymath}
+  Siguiendo el procedimiento tendremos 
+  \begin{displaymath}
+    \norm{v_n} \le \beta \alpha^{n} \norm{w}
+    \text{ y }
+    \norm{Tv_n - w_n} \le \alpha^{n+1} \norm{w}.
+  \end{displaymath}
+  Definamos \(v = \sum_{n\ge 0} v_n\). Afirmamos que \(v\) existe y que \(Tv = w\).
+  Para lo primero, basta ver que la serie es absolutamente convergente porque
+  estamos en un espacio de Banach:
+  \begin{displaymath}
+    \norm{v}
+    \le \sum_{n \ge 0} \norm{v_n}
+    \le \beta \norm{w} \sum_{n \ge 0} \alpha^{n}
+    \le \beta \norm{w} \frac{1}{1-\alpha}
+    < \infty,
+  \end{displaymath}
+  pues \(\alpha \in (0,1)\). Para lo segundo, debemos probar que la imágenes
+  de las sumas parciales convergen a \(w\).
+  \begin{alignat*}{2}
+    \norm{w - \sum_{n=0}^{N} T v_n }
+    &=
+    \norm{(w-Tv_0) - \sum_{n=1}^{N} Tv_n}
+    \\&=
+    \norm{w_1 - \sum_{n=1}^{N} Tv_n}
+    \\&=
+    \norm{(w_1 - Tv_1) - \sum_{n=2}^{N} Tv_n}
+    \\&=
+    \norm{w_2 - \sum_{n=2}^{N} Tv_n}
+    \\&\vdots
+    \\&=
+    \norm{w_N - Tv_N}
+    \le
+    \alpha^{N+1} \norm{w}.
+  \end{alignat*}
+  Tomando \(N\to\infty\) tenemos que \(Tv = w\). 
+\end{Solucion}
+
+% Problema 7
+\begin{Problema}
+  Sea \(X\) un espacio métrico completo y sea \((f_n)_{n}\) una sucesión de funciones
+  continuas en \(X\) con valores en \(\K\), tal que \(f(x) = \lim_{n\to\infty} f_n(x)\)
+  existe para todo \(x\in X\). En esta pregunta, demostrará que el conjunto donde la
+  función límite \(f\) es continua, es denso en \(X\).
+  \begin{enumerate}[(a)]
+    \item Pruebe que para todo \(\epsilon > 0\) y toda bola cerrada \(\overline{B} \subset X\),
+    existe una bola abierta \(\tilde{B} \subset B\) y un \(N\in \N\), tales que
+    \begin{displaymath}
+      \abs{f_N(x) - f(x)} \le \epsilon
+      \qquad
+      \text{para todo } x \in \tilde{B}.
+    \end{displaymath}
+    (\textit{Sugerencia:} Considere \(E_l \coloneqq \lbrace x\in \overline{B} \colon 
+    \sup_{j,k\ge l} \abs{f_j(x) - f_k(x)} \le \epsilon \rbrace\) y note que
+    \(\overline{B} = \bigcup_{l} E_{l}\)).
+
+    \item
+    Defina la oscilación de \(f\) en \(x\), 
+    \begin{displaymath}
+      osc(f)(x) = \lim_{r\downarrow 0} \sup_{y,z\in B_r(x)} \abs{f(y) - f(z)},
+    \end{displaymath}
+    y note que \(f\) es continua en \(x\) si y solo si \(osc(f)(x) = 0\). Demuestre que
+    \begin{displaymath}
+      F_t \coloneqq \lbrace x\in X\colon osc(f)(x) \ge t \rbrace, t>0,
+    \end{displaymath}
+    es cerrado y denso en ninguna parte. 
+    (\textit{Sugerencia}: \(\lbrace x\in X \colon osc(f)(x) < t \rbrace\) es abierto
+    para cualquier función \(f\)) 
+
+    \item
+    Concluya que el conjunto de discontinuidades de \(f\) es de la primera categoría en
+    \(X\), i.e. el conjunto donde \(f\) es continua es genérico en \(X\).
+  \end{enumerate}
+\end{Problema}
+\begin{Solucion}
+\begin{enumerate}[(a)]
+  \item
+  Definamos \(E_l\) como en la sugerencia. En primer lugar, notemos que son cerrados.
+  En efecto, sea \(x\) un punto límite de \(E_l\), entonces existe una sucesión \((x_n)_n\)
+  en \(E_l\) tal que \(x_n \to x\). Para ver que \(x\in E_l\) notemos que descomponiendo
+  el límite y usando la continuidad de \(f_i\) se tiene que
+  \begin{displaymath}
+    \sup_{j,k\le l} \abs{f_j(x) - f_k(x)}
+    =
+    \sup_{j,k\le l} \lim_{n\to\infty} \abs{f_j(x_n) - f_k(x_n)}
+    \le \epsilon.
+  \end{displaymath}
+  Así, llegamos que la bola cerrada es unión de conjuntos cerrados y por Baire
+  (la bola es completa al ser cerrada) se sigue existe \(N\) tal que \(E_N\) tiene interior
+  no vacío. Sea \(\tilde{B}\) una bola abierta en \(E_N\), entonces se sigue que
+  \begin{displaymath}
+    \abs{f_N(x) - f_j(x)} \le \epsilon 
+    \qquad\forall x\in \tilde{B}.
+  \end{displaymath}
+  Tomando \(j \to \infty\) se concluye lo pedido.
+
+  \item
+
+  
+\end{enumerate}
+\end{Solucion}
+
+\end{document}
+

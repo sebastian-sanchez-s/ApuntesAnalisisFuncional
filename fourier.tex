@@ -1,0 +1,939 @@
+\documentclass{article}
+
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{mathtools}
+\usepackage{tikz}
+
+\newtheorem{Teorema}{Teorema}
+\newtheorem{Lema}{Lema}
+\newtheorem{Proposicion}{Proposición}
+\newtheorem{Corolario}{Corolario}
+
+\theoremstyle{plain}
+\newtheorem{Problema}{Problema}
+
+\theoremstyle{definition}
+\newtheorem{Definicion}{Definición}
+
+\newcommand{\T}{\mathbb{T}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\F}{\mathcal{F}}
+
+\DeclareMathOperator{\esssup}{esssup}
+
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\newcommand{\normL}[2]{\lVert #2 \rVert_{L^#1}}
+
+\begin{document}
+
+\noindent\tikz{
+\draw (0,0)--(\linewidth, 0) 
+node[midway,above,fill=white]{\Large Series de Fourier}
+node[midway,below,fill=white]{\small y Banach-Steinhaus}; }
+\newline
+
+Trabajaremos con funciones en \(L^2\) donde 
+\begin{displaymath}
+  L^2 \coloneqq 
+  L^{2}(\T)
+  =
+  \left\{ 
+    f\colon \R \to \C
+    \mid 
+    f \text{ sea medible, \(2\pi\){-}periódica y }
+    \int_{\T} \abs{f(x)}^2 \, dx < \infty
+  \right\} 
+\end{displaymath}
+y \(\T = [-\pi,\pi]\) con extremos identificados .i.e. el círculo. 
+con el producto interno de \(L^2\)
+\begin{displaymath}
+  \langle f,g \rangle
+  =
+  \int_{\T} f(x) \overline{g(x)} \, dx.
+\end{displaymath}
+
+\begin{Proposicion}[Conjunto ortornormal]
+  Las familia \(\lbrace (2\pi)^{-1/2} e^{inx} \rbrace_{n\ge 0}\) es un conjunto ortonormal
+  en \(L^2\).
+\end{Proposicion}
+\begin{proof}
+  Sean \(m > n > 0\). Luego,
+  \begin{align*}
+    \langle (2\pi)^{-1/2} e^{inx}, (2\pi)^{-1/2} e^{imx} \rangle
+    &=
+    (2\pi)^{-1}
+    \int_{-\pi}^{\pi} 
+      e^{inx} e^{-imx}
+      \, dx
+    \\&=
+    (2\pi)^{-1}
+    \int_{-\pi}^{\pi} 
+      e^{ix(n-m)}
+      \, dx
+    \\&=
+    -(2\pi)^{-1} (n-m)^{-1}
+    \left( e^{ix(m-n)} \right)\big\vert_{-\pi}^{\pi}
+    \\&=
+    -(2\pi)^{-1} (n-m)^{-1}
+    (\pm 1 \mp 1)
+    = 0.
+  \end{align*} 
+  Por otro lado, si \(n=0\):
+  \begin{displaymath}
+    (2\pi)^{-1/2} \int_{\T} e^{\pm inx} = 0.
+  \end{displaymath}
+\end{proof}
+
+\begin{Definicion}[Serie de Fourier]
+  Sea \(f\in L^2\), su serie de Fourier es
+  \begin{displaymath}
+    \sum_{n\in\Z} \hat f(n) e_{n}
+  \end{displaymath}
+  donde \(e_n(x) = (2\pi)^{-1/2} e^{inx}\) y 
+  \begin{displaymath}
+    \hat f(n) = (2\pi)^{-1/2} \int_{\T} f(x) e^{-inx} \, dx
+  \end{displaymath}
+  es el \(n\){-}ésimo coeficiente de Fourier. La serie truncada
+  \begin{displaymath}
+    S_N f(x) = \sum_{\abs{n} \le N} \hat f(n) e_{n}(x)
+  \end{displaymath}
+  es la suma parcial de Fourier.
+\end{Definicion}
+
+\begin{Teorema}\label{main:thm}
+  Si \(f\in L^2\), \(S_N f \to f\) en norma \(L^2\) cuando \(N\to \infty\).  
+\end{Teorema}
+
+Equivalentemente, la colección \(\lbrace e_n \rbrace_{n\in\Z}\) es una base ortonormal de \(L^2\).
+Como ya tenemos la ortonormalidad, queda ver la maximalidad. Suponiendo que no es maximal, 
+debe existir una función \(f \ne 0\) tal que
+\begin{displaymath}
+  \int_{T} f(x) e^{-inx} \,dx = 0 \quad\forall n\in \Z.
+\end{displaymath}
+La idea es probar que \(f = 0\) c.t.p. No obstante, esto es más complejo de lo que parece. 
+El propósito de esta sección es buscar una forma alternativa de probar el Teorema~\ref{main:thm}.
+
+\begin{Proposicion}[Caracterización de \(S_N f\) y kernel de Dirichlet]
+  Si \(f\in L^2\), entonces 
+  \begin{displaymath}
+    S_N f(x) = \int_{\T} D_N(x-t) f(t) \, dt = D_N\ast f(x)
+  \end{displaymath}
+  donde 
+  \begin{displaymath}
+    D_N(x) = \begin{cases}
+      \frac{2N+1}{2\pi} &, x=0 \\
+      \frac{ \sin\left( Nx + x/2 \right)}{ 2\pi \sin(x/2)} &, x\ne 0
+    \end{cases}
+  \end{displaymath}
+  es el kernel de Dirichlet. 
+\end{Proposicion}
+\begin{proof}
+  Expandamos la definición
+  \begin{align*}
+    S_N f(x)
+    &=
+    \sum_{\abs{n} \le N}
+      \frac{1}{2\pi}
+      \int_{\T} f(t) e^{-int} \, dt
+      \, e^{inx}
+    \\&=
+    \sum_{\abs{n} \le N}
+      \frac{1}{2\pi}
+      \int_{\T} f(t) e^{-in(t-x)} \, dt
+    \\&\le
+    \int_{\T} 
+      f(t) 
+      \frac{1}{2\pi}
+      \sum_{\abs{n} \le N}
+      e^{-in(t-x)}
+    \, dt.
+  \end{align*}
+  Así que basta probar que \(2\pi D_N(x) = \sum_{\abs{n}\le N} e^{inx}\).
+
+  \underline{Caso \(x=0\):}
+  \begin{displaymath}
+    \sum_{\abs{n} \le N} e^{in\cdot 0}
+    = \sum_{\abs{n} \le N} 1
+    = 2N+1.
+  \end{displaymath}
+
+  \underline{Caso \(x\ge 0\):} Tomemos \(w = e^{ix}\). Luego,
+  \begin{align*}
+    \sum_{\abs{n} \le N} w^n
+    &=
+    \sum_{0 \le n \le N} w^n
+    +
+    \sum_{1 \le n \le N} w^{-n}
+    \\&=
+    \frac{1-w^{N+1}}{1-w}
+    +
+    \frac{w^{-1} - w^{-N-1}}{1-w^{-1}}
+    \\&=
+    \frac{1-w^{N+1}}{1-w}
+    +
+    \frac{w^{-N}-1}{1-w}
+    \\&=
+    \frac{w^{-N} - w^{N+1}}{1-w}
+    \\&=
+    \frac{w^{-N-1/2} - w^{N+1/2}}{w^{-1/2} - w^{1/2}}
+    \\&=
+    \frac{ \sin\left( (N+1/2)x \right) }{ \sin\left( x/2 \right)}.
+  \end{align*}
+\end{proof}
+
+\begin{Proposicion}[Propiedades del kernel de Dirichlet]
+  \(D_N(x)\) satisface que
+  \begin{enumerate}
+    \item es par;
+    \item es \(2\pi\){-}periódica;
+    \item es suave;
+    \item integra \(1\) sobre el círculo,
+    \begin{displaymath}
+      \int_{\T} D_N(x) \, dx = 1;
+    \end{displaymath}
+    \item para todo \(\delta > 0\) se tiene que
+    \begin{displaymath}
+      \int_{\delta \le \abs{x} \le \pi} D_N(x) \to 0
+      \quad \text{cuando}\quad N\to \infty.
+    \end{displaymath}
+  \end{enumerate}
+\end{Proposicion}
+\begin{proof}
+\begin{enumerate}
+  \item 
+  \begin{align*}
+    D_N(x) 
+    &= \frac{1}{2\pi} \frac{\sin((N+1/2)x)}{\sin(x/2)} 
+    \\&= \frac{1}{2\pi} \frac{-\sin(-(N+1/2)x)}{-\sin(-x/2)} 
+    = D_N(-x).
+  \end{align*}
+
+  \item
+  \begin{align*}
+    2\pi D_N(x) 
+    &= \frac{\sin((N+1/2)x)}{\sin(x/2)} 
+    \\&= \frac{-\sin((N+1/2)(x+2\pi))}{-\sin((x+2\pi)/2)} 
+    = 2\pi D_N(x+2\pi).
+  \end{align*}
+
+  \item es cociente de funciones suaves.
+
+  \item Recordar que \(2\pi D_N(x) = \sum_{\abs{n}\le N} e^{inx}\). 
+  \begin{align*}
+    \int_{\T} \sum_{\abs{n} \le N} e^{inx}\, dx
+    &=
+    \sum_{\abs{n}\le N} \int_{\T} e^{inx} \, dx
+    = 2\pi.
+  \end{align*}
+\end{enumerate}
+\end{proof}
+
+\begin{Definicion}[Media de Cesàro]
+  \begin{displaymath}
+    \sigma_N f 
+    = 
+    \frac{1}{N} \sum_{0\le n < N} S_{n} f.
+  \end{displaymath}
+\end{Definicion}
+
+\begin{Proposicion}[medias de Cesàro también convergen]\label{medias-convergen}
+  Si \(S_N f \xrightarrow{L^2} f\), entonces \(\sigma_N f \xrightarrow{L^2} f\).  
+\end{Proposicion}
+\begin{proof}
+  Sea \(\epsilon > 0\). Notemos que 
+  \begin{align*}
+    \normL{2}{f - \sigma_N f}
+    &=
+    \frac{1}{N} \normL{2}{ Nf - \sum_{0\le n\le N-1} S_n f}
+    \\&\le
+    \frac{1}{N} \sum_{n=0}^{N-1} \normL{2}{f - S_n f}
+  \end{align*}
+  Sea \(N_0\) tal que \(\normL{2}{f - S_{n} f} \le \epsilon\) para \(n\ge N_0\). 
+  Tomando \(N \gg N_0\),
+  \begin{align*}
+    \normL{2}{f - \sigma_N f}
+    &=
+    \frac{1}{N} \underbrace{\sum_{n=0}^{N_0} \normL{2}{f - S_n f}}_{<\infty}
+    +
+    \frac{1}{N} \sum_{n=N_0+1}^{N} \normL{2}{f - S_n f}
+    \\&\le
+    \frac{1}{N} C
+    +
+    \epsilon C'
+  \end{align*}
+  Tomando \(N\) lo suficientemente grande podemos hacer que \(1/N < \epsilon\) de lo que se 
+  sigue el resultado.
+\end{proof}
+
+\begin{Teorema}[Fejèr]
+  Si \(\sigma_N f \to f\) en \(L^2\) y \(f\in C(\T)\), entonces
+  \begin{displaymath}
+    \sigma_N f \xrightarrow{\text{unif}} f 
+    \quad\text{en}\quad\T.
+  \end{displaymath}
+\end{Teorema}
+
+Si vale el Teorema de Fejèr, entonces vale el Teorema~\ref{main:thm} para funciones
+continuas. En efecto,
+usando la Proposición~\ref{medias-convergen} tenemos que
+\begin{align*}
+  \hat f(n) = 0 \quad \forall N\in\Z
+  &\Rightarrow
+  S_N f \equiv 0 \quad \forall N\in \Z
+  \\&\Rightarrow
+  \sigma_N f \equiv 0 \quad \forall N\in\Z \quad \text{(por la proposición)}
+  \\&\Rightarrow
+  \lim_{N\to\infty} \sigma_N f = f \quad\text{(por Fejér)}
+  \\&\Rightarrow
+  f = 0 \,\,c.t.p.
+\end{align*}
+Así que la nueva tarea es demostrar el teorema de Fejèr.
+
+\begin{Proposicion}[Caracterización de la media de Cesàro y el kernel de Fejèr]
+  Si \(f\in L^2\), entonces
+  \begin{displaymath}
+    \sigma_N f(x) = \int_{\T} F_N(x-t) f(t) \, dt
+  \end{displaymath}
+  donde
+  \begin{displaymath}
+    F_N(x) = 
+    \begin{cases}
+      \frac{N}{2\pi} &, x=0\\
+      \frac{1}{2\pi N} \frac{\sin^2(Nx/2)}{\sin^2(x/2)} &, x\ne0
+    \end{cases}
+  \end{displaymath}
+  es el kernel de Fejèr.
+\end{Proposicion}
+\begin{proof}
+  \begin{align*}
+    N \sigma_{N} f (x)
+    =
+    \int_{\T} f(t) \left( D_0(x-t) + \cdots + D_{N-1}(x-t) ) \, dt
+  \end{align*}
+  Luego,
+  \begin{align*}
+    \sum_{k=0}^{N-1} D_k (x)
+    &=
+    \frac{1}{2\pi} 
+    \sum_{k=0}^{N-1} \frac{\sin((k+1/2)x)}{\sin(x/2)}
+    \\&=
+    \frac{1}{2\pi \sin(x/2)} 
+    \sum_{k=0}^{N-1} \sin((k+1/2)x)
+    \\&=
+    \frac{1}{4\pi \sin^2(x/2)} 
+    \sum_{k=0}^{N-1} 2\sin\left( (k+\frac{1}{2}) x \right) \sin(x/2)
+    \\&=
+    \frac{1}{4\pi \sin^2(x/2)} 
+    \sum_{k=0}^{N-1} 
+    \left(
+      \cos\left( (k+\frac{1}{2})x - x/2 \right) 
+      - 
+      \cos\left( (k+\frac{1}{2})x + x/2 \right)
+    \right)
+    \\&=
+    \frac{1}{4\pi \sin^2(x/2)} 
+    \sum_{k=0}^{N-1} 
+    \left(
+      \cos\left( kx \right)
+      - 
+      \cos\left( (k+1)x \right) 
+    \right)
+    \\&=
+    \frac{1 - \cos(Nx)}{2} \frac{1}{2\pi \sin^2(x/2)} 
+    \\&=
+    \frac{\sin^2(Nx/2)}{2\pi\sin^2(x/2)}.
+  \end{align*}
+\end{proof}
+
+\begin{Proposicion}[Propiedades del kernel de Fejèr]
+  \(F_N(x)\) es par, \(2\pi\){-}periódica, suave, integra \(1\) en \(\T\) y es positiva.
+  Además, para \(\delta \le \abs{x} \le \pi\) se cumple que 
+  \begin{displaymath}
+    \abs{F_N(x)} \le \frac{1}{2\pi N \sin^{2}(\delta/x)}.
+  \end{displaymath}
+\end{Proposicion}
+
+\begin{Definicion}[Buenos Kernels]
+  Una familia \(\lbrace K_n \rbrace_{n\in \N}\) se dice de buenos kernels en \(L^1\) si:
+  \begin{enumerate}
+    \item \(\int_{\T} K_n(x) \,dx = 1\);
+    \item \(\sup_{n\in\N} \int_{\T} \abs{K_n(x)}\, dx < \infty\), y
+    \item \(\int_{\delta \le \abs{x} \le \pi} \abs{K_n(x)} \, dx \xrightarrow{n\to\infty} 0\) 
+    para todo \(\delta > 0\).
+  \end{enumerate}
+\end{Definicion}
+
+Por lo visto anteriormente, la familia de los kernels de Fejèr son buenos kernels.
+
+\begin{Teorema}[Convolución y convergencia con buenos kernels]
+  Si \(\lbrace K_n \rbrace_n\) es una familia de buenos kernels en \(L^1\) y 
+  \(f\in C(\T)\), entonces
+  \begin{displaymath}
+    K_N\ast f = f \ast K_N \xrightarrow{\text{unif}} f
+    \quad\text{ en } \T. 
+  \end{displaymath}
+\end{Teorema}
+\begin{proof}
+  Hay que acotar uniformemente la diferencia
+  \begin{displaymath}
+    \abs{ K_N\ast f(x) - f(x)}
+  \end{displaymath}
+  Recordando que \(\int_{\T} K_N(y) \, dy = 1\) tenemos que
+  \begin{displaymath}
+    \abs{ K_N \ast f(x) - f(x)}
+    \le
+    \int_{\T} \abs{f(x) - f(x-y)} K_N(y)\, dy
+    \eqqcolon I
+  \end{displaymath}
+  Sea \(\epsilon > 0\).
+  Como la función \(f\) es continua, existe \(\delta\) tal que \(\abs{f(x) - f(x-y)} \le \epsilon\)
+  si \(\abs{y} \le \delta\). Luego,
+  \begin{align*}
+    I 
+    &\le 
+    \int_{\abs{y} \le \delta}
+      \abs{ f(x) - f(x-y) } K_N(y)\, dy
+    +
+    \int_{\delta \le \abs{y} \le \pi}
+      \abs{ f(x) - f(x-y) } K_N(y)\, dy
+    \\&\le
+    \epsilon M 
+    + 
+    C
+    \int_{\delta \le \abs{y} \le \pi} \abs{K_N(y)}\, dy 
+  \end{align*}
+  donde \(M\) sale de que \(\lbrace K_N\rbrace_{N}\) es una familia de buenos kernels
+  (propiedad (2)) y \(C \ge 2\sup_{\T} \abs{f}\). Por último, usando la propiedad
+  (3) de los buenos kernels se tiene que para \(N\) suficientemente grande
+  \begin{displaymath}
+    \int_{\delta \le \abs{y} \le \pi} \abs{K_N(y)}\, dy 
+    \le \epsilon.
+  \end{displaymath}
+  De esta forma se tiene que \(\abs{ f(x) - K_N \ast f(x) } \le \epsilon (M + C)\) 
+  independiente de \(x\) y por la arbitrariedad de \(\epsilon\) se concluye la convergencia. 
+\end{proof}
+
+\begin{Corolario}
+  Si \(f\in C(\T)\), entonces \(\sigma_N f \xrightarrow{\text{unif}} f\) cuando \(N\to\infty\).   
+\end{Corolario}
+\begin{proof}
+  \(\sigma_N f = F_N \ast f\) y \(F_N\) es una familia de buenos kernels.  
+\end{proof}
+
+\begin{Corolario}\label{cor:coeff f nulo impl f nulo}
+  Si \(f\in C(\T)\) y \(\hat f(n) = 0\) para todo \(n\in \Z\), entonces \(f = 0\).   
+\end{Corolario}
+\begin{proof}
+  Si \(\hat f(n) = 0\), entonces \(S_N f = 0\) y por lo tanto \(\sigma_N f = 0\). Por
+  el corolario anterior, \(f = 0\). 
+\end{proof}
+
+\begin{Corolario}
+  Si \(f\in C(\T)\) es tal que su serie de Fourier converge absoluta y uniformemente, .i.e.
+  \begin{displaymath}
+    \sum_{n\in\Z} \abs{ \hat f(n) e_n(x) } < \infty.
+  \end{displaymath}
+  Entonces \(S_N f \xrightarrow{\text{unif}} f\).
+\end{Corolario}
+\begin{proof}
+\end{proof}
+
+Esto nos da convergencia para funciones continuas. La idea ahora es aproximar las funciones
+en \(L^2\).
+
+\begin{Proposicion}
+  Si \(f\in L^2\), entonces \(\normL{2}{\sigma_N f} \le \normL{2}{f}\).
+\end{Proposicion}
+\begin{proof}
+  Usando la definición y la desigualdad de Bessel
+  \begin{displaymath}
+    \normL{2}{\sigma_N f}
+    \le
+    \frac{1}{N} \sum_{n=0}^{N-1} \normL{2}{S_n f}
+    \le
+    \frac{1}{N} \sum_{n=0}^{N-1} \normL{2}{f}
+    \le \normL{2}{f}.
+  \end{displaymath}
+\end{proof}
+
+El resultado vale para \(1 \le p <\infty\). 
+
+\begin{Teorema}
+  Sea \(f\in L^p(\T)\) (\(1\le p<\infty)\), entonces \(\sigma_N f \to f\) en \(L^p\).    
+\end{Teorema}
+\begin{proof}
+  Sea \(\epsilon > 0\).
+  Como \(C\) es denso en \(L^p\), existe \(g\in C\) tal que
+  \begin{displaymath}
+    \normL{p}{ f - g } \le \epsilon.
+  \end{displaymath}
+  Luego,
+  \begin{displaymath}
+    \normL{p}{ f-\sigma_N f }
+    \le
+    \normL{p}{ f - g }
+    +
+    \normL{p}{ g - \sigma_N g }
+    +
+    \normL{p}{\sigma_N g - \sigma_N f}
+  \end{displaymath}
+  Por~ existe \(N_0\) tal que \(\normL{p}{ g - \sigma_N g } \le \epsilon\).  
+  Por otro lado,
+  \begin{align*}
+    \normL{p}{\sigma_N g - \sigma_N f}
+    &\le
+    \normL{p}{\sigma_N (g-f)}
+    \\&\le
+    \normL{p}{g-f}.
+  \end{align*}
+  Así, para \(N>N_0\) suficientemente grande
+  \begin{displaymath}
+    \normL{p}{f-\sigma_N} \le 3\epsilon.
+  \end{displaymath}
+\end{proof}
+
+\begin{Corolario}
+  Si \(f\in L^2\), \(S_N f \xrightarrow{L^2} f\).
+\end{Corolario}
+\begin{proof}
+\end{proof}
+
+\begin{Lema}[Riemann{-}Lebesgue]
+  Si \(f\in L^1\), entonces \(\hat f(n) \xrightarrow{\abs{n}\to\infty} 0\).  
+\end{Lema}
+\begin{proof}
+  Notar que si \(\abs{n}>N\) 
+  \begin{displaymath}
+    \widehat{\sigma_N f}(n)
+    =
+    \frac{1}{N}
+    \sum_{k=0}^{N-1}
+      \sum_{\abs{j} \le k}
+        \hat{f}(j)
+        \int_{T} e_j(t) e_n(t)\, dt
+    =
+    0
+  \end{displaymath}
+  Sea \(\epsilon > 0\). Luego, tomando \(N\) suficientemente grande se tiene que 
+  \(\normL{1}{\sigma_N f - f} < \epsilon\). Por lo anterior se sigue que
+  \begin{displaymath}
+    \abs{ \hat f(n) }
+    =
+    \abs{ \widehat{\sigma_N f}(n) - \hat f(n) }
+    \le
+    \normL{1}{\sigma_N f - f} < \epsilon.
+  \end{displaymath}
+\end{proof}
+
+\begin{Definicion}[Operador de Fourier]
+  Para \(f\in L^1\), el operador de Fourier se define como:
+  \begin{displaymath}
+    \hat f \coloneqq \F f \coloneqq (\hat f(n))_{n\in \Z}. 
+  \end{displaymath}
+\end{Definicion}
+
+\begin{Proposicion}[Inyección en \(\hat{c_0}\)]
+  Si \(f\in L^1\), entonces \(L^1 \xrightarrow{\F} \hat{c}_0\) es una aplicación lineal, acotada
+  e inyectiva.
+  \begin{displaymath}
+    \hat c_0 \coloneqq \lbrace (a_n)_{n\in\Z}\colon \lim_{\abs{n} \to \infty} a_n = 0 \rbrace.
+  \end{displaymath}
+\end{Proposicion}
+\begin{proof}
+  Por Riemann{-}Lebesgue la aplicación está bien definida. Veamos el resto de propiedades:
+  
+  \underline{lineal}: se sigue por la linealidad de la integral.
+
+  \underline{acotada}: se sigue porque \(f\in L^1\). 
+
+  \underline{inyectiva}: se sigue de aplicar el Corolario~\ref{cor:coeff f nulo impl f nulo} y aproximando
+  por funciones continuas.
+\end{proof}
+
+Veamos porqué la aplicación \(\F \colon L^1 \to \hat c_0\) no es sobreyectiva. Supongamos, buscando
+una contradicción, que lo fuese. Por el resto de las propiedades, \(\F\) es un isomorfismo continuo
+y en particular existe \(\F^{-1}\) su inversa continua. Luego,
+\begin{displaymath}
+  \normL{1}{f} = \normL{1}{\F^{-1} \F f} \le C \norm{\F f}_{\ell^{\infty}}. 
+\end{displaymath}
+para cualquier \(f\in L^1\). Consideremos \(f(x) = D_N(x)\). Entonces
+\begin{displaymath}
+  \hat f(x) = \begin{cases}
+    \frac{1}{\sqrt{2\pi}} &, \abs{n} \le N\\
+    0 &, \abs{n} > N\\
+  \end{cases}
+\end{displaymath}
+así que \(\norm{\F f}_{\ell^{\infty}} = 1/\sqrt{2\pi}\). Sin embargo,
+
+\begin{Proposicion}
+  \begin{displaymath}
+    \normL{1}{D_N} \ge c\log(N).
+  \end{displaymath}
+\end{Proposicion}
+\begin{proof}
+\begin{alignat*}{2}
+  \normL{1}{D_N}
+  &=
+  \int_{-\pi}^{\pi} 
+    \abs{D_N(x)} 
+  \,dx
+  &&=
+  \frac{1}{\pi}
+  \int_{0}^{\pi} 
+    \frac{\abs{\sin((N+1/2) x)}}{ \sin(x/2) }
+  \,dx
+  \\&\ge
+  \frac{2}{\pi}
+  \int_{0}^{\pi} 
+    \frac{\abs{\sin((N+1/2) x)}}{ x }
+  \,dx
+  \\&=
+  \frac{2}{\pi}
+  \int_{0}^{\pi (N+1/2)} 
+    \frac{\abs{\sin(u)}}{ u }
+  \, du
+  &&\ge
+  \frac{2}{\pi}
+  \int_{0}^{\pi N} 
+    \frac{\abs{\sin(u)}}{ u }
+  \, du
+  \\&\ge
+  \frac{2}{\pi}
+  \sum_{n=1}^{N}
+    \int_{(n-1)\pi}^{n\pi} 
+      \frac{\abs{\sin(u)}}{ u }
+    \, du
+  &&\ge
+  \frac{2}{\pi}
+  \sum_{n=1}^{N}
+    \frac{1}{n\pi}
+    \underbrace{
+    \int_{(n-1)\pi}^{n\pi} 
+      \abs{\sin(u)}
+    \, du}_{C_1}
+  \\&\ge
+  \frac{2 C_1}{\pi^2}
+  \sum_{n=1}^{N}
+    \frac{1}{n}
+  &&\ge C \log(N).
+\end{alignat*}
+\end{proof}
+
+Vimos que para funciones \(f\in L^2\) se tiene que \(S_N f \to f\) en \(L^2\). De hecho,
+\(S_N f \to f\) puntualmente c.t.p. (Teorema de Carlerson). 
+En lo que sigue vamos a probar que la divergencia puntual pasa en conjuntos grandes.
+
+\begin{Teorema}[Banach-Steinhaus]
+  Sea \(X\) es un espacio Banach y \(Y\) un espacio normado. 
+  Sean \(\lbrace T_n \rbrace_{n\in\N} \subset B(X,Y)\) una familia de operadores
+  lineales acotados de \(X\) en \(Y\). Entonces las siguientes son mutuamente excluyentes:
+  \begin{enumerate}
+    \item \(\sup_{n\in\N} \norm{T_n} < \infty\)
+    \item existe \(A\) un conjunto genérico de tipo \(G_{\delta}\) (intersección numerable de abiertos) 
+    en \(X\) tal que
+    \begin{displaymath}
+      \sup_{n} \norm{T_n x} = \infty
+      \quad\forall x\in X.
+    \end{displaymath}
+  \end{enumerate}
+\end{Teorema}
+\begin{proof}
+Definamos \(\psi(x) \coloneqq \sup_{n\in \N} \norm{T_n x}\) y consideremos el conjunto
+abierto 
+\begin{displaymath}
+  U_n 
+  = \left\{ x\in X \colon \psi(x) > n \right\}
+  = \bigcup_{k\in\N} \left\{ x\in X \colon \norm{T_k x} > n \right\} 
+  = \bigcup_{k\in\N} T_k^{-1} \left( Y\setminus B(0,n) \right).
+\end{displaymath}
+
+Si la familia de conjuntos \(U_n\) es densa en \(X\), entonces el conjunto
+\begin{displaymath}
+  A \coloneqq \bigcap_{n\ge 1} U_n 
+\end{displaymath}
+es \(G_{\delta}\) y satisface que 
+\begin{displaymath}
+  \sup_{k\in\N} \norm{T_k x} = \infty
+  \quad\forall x\in A.
+\end{displaymath}
+por lo tanto la condición (1) no es posible. 
+
+Por otro lado, si al menos uno no es denso, dígase, \(U_n\), entonces el complemento
+\(X\setminus U_n\) contiene una bola \(B(u,r)\) para algún \(r>0\) y \(u\in X\setminus U_n\).
+Luego, para todo \(x\in B(u,r)\) se tiene que
+\begin{displaymath}
+  n \ge \psi(x) \ge \norm{T_k x} \quad \forall k\in\N.
+\end{displaymath}
+Haciendo el cambio de coordenadas \(x = u+y\) con \(y\in B(0,r)\) tenemos que  
+\begin{align*}
+  \norm{T_k (u+y)} &\le n
+  \\\Rightarrow
+  \norm{T_k y}
+  &\le
+  \norm{T_k u} + \norm{T_k (u-y)}
+  \le 2n
+  \\\Rightarrow
+  \norm{T_k y}
+  &\le
+  \frac{2n}{r}
+  \norm{y}
+  \quad\forall y\in B(0,1).
+\end{align*}
+Se sigue que \(\norm{T_k} < \frac{2n}{r}\) para todo \(k\in \N\). En particular, 
+\(\norm{T_k x} < \infty\) para todo \(x\in X\).
+\end{proof}
+
+\begin{Corolario}
+  Sea \(X\) un espacio de Banach y \(Y\) un espacio normado. Sean \(\lbrace T_k \rbrace_{k}\)
+  operadores lineales acotados de \(X\) a \(Y\). Supongamos que
+  \begin{displaymath}
+    \forall x\in X \colon\quad Tx \coloneqq \lim_{k\to\infty} T_k x \in Y
+  \end{displaymath}
+  entonces \(T\in B(X,Y)\) y \(\norm{T} \le \liminf_{k\to\infty} \norm{T_k} < \infty\).  
+\end{Corolario}
+\begin{proof}
+  Como los operadores son acotados y el límite puntual existe, por Banach{-}Steinhaus 
+  \begin{displaymath}
+    \sup_{k} \norm{T_k} < \infty.
+  \end{displaymath}
+  Es sencillo verificar que \(T\) es lineal. 
+  Por otro lado,
+  \begin{displaymath}
+    \norm{Tx}
+    =
+    \lim_{k\to\infty} \norm{T_k x}
+    \le
+    \sup_{n\in \N} \inf_{k\ge n} \norm{T_k x}
+    \le
+    \sup_{n\in \N} \inf_{k\ge n} \norm{T_k}\norm{x}
+  \end{displaymath}
+  Diviendo por \(\norm{x}\) tenemos lo pedido.  
+\end{proof}
+
+\begin{Teorema}[Divergencia Puntual]\label{teo:div-puntual}
+  Para todo \(x\in\T\), existe un conjunto genérico \(A_x \in C(\T)\) tal que
+  \(\sup_{N} \abs{S_N f(x)} = \infty\) para todo \(f\in A_x\).  
+\end{Teorema}
+\begin{proof}
+  Basta demostrar para el caso \(x=0\) pues...
+  Consideremos \(S_N^0 \colon C(\T) \to \C\) la evaluación de la suma parcial de fourier
+  en \(x=0\) .i.e.
+  \begin{displaymath}
+    S_N^0 f = S_N f(0).
+  \end{displaymath}
+  
+  Notar que \(S_N^0 f = \int_{\T} D_N(y) f(y) \, dy\), así que
+  \begin{displaymath}
+    \norm{S_N^0} \le \norm{D_N}_{L^1}.
+  \end{displaymath}
+  Notar que la igualdad se alcanza en \(f(y) = sgn(D_N(y))\) y en tal caso
+  \begin{displaymath}
+    \norm{S_N^0} = \norm{D_N}_{L^1} \ge C\log N \xrightarrow{N\to\infty} \infty.
+  \end{displaymath}
+  El problema es que \(f(y)\) no es continua, no obstante, \(f(y) \in L^1\) y podemos
+  aproximar por funciones continuas. Así, por Banach-Steinhaus, existe un conjunto genérico
+  en \(C(\T)\) donde el operador \(S_N^0\) diverge.  
+\end{proof}
+
+\noindent\tikz{\draw (0,0) -- (\textwidth,0) node[midway,above,fill=white]{Problemas}; }
+
+\begin{Problema}
+  Sea \(f\in L^2\) una función Lipschitz continua en \(x_0 \in [-\pi, \pi]\). 
+  Demuestre que su serie de Fourier \(S_N f\) converge puntualmente a \(f\)
+  en \(x = x_0\). 
+\end{Problema}
+\begin{proof}
+  Sea \(\epsilon > 0\). Queremos probar que para \(N\) suficientemente grande se tiene que
+  \begin{displaymath}
+    E = \abs{ f(x_0) - S_N f(x_0) } < \epsilon.
+  \end{displaymath}
+
+  Usando la caracterización con el kernel de Dirichlet tenemos que
+  \begin{displaymath}
+    E = \abs{ \int_{\T} (f(x_0) - f(x_0 - t)) D_N(t) \, dt }.
+  \end{displaymath}
+  Dado que \(f\) es Lipschitz continua en \(x_0\), existe \(\delta > 0\) tal que
+  \begin{displaymath}
+    \abs{t} < \delta \implies \abs{ f(x_0) - f(x_0 - t) } < \epsilon.
+  \end{displaymath}
+  Por otro lado, por las propiedades del kernel de Dirichlet, para \(N\) suficientemente grande
+  se cumple que
+  \begin{displaymath}
+    \int_{\abs{t} \ge \delta} \abs{ D_N(t) } \, dt < \epsilon.
+  \end{displaymath}
+  Así, separando la integral tenemos que
+  \begin{displaymath}
+    E \le 
+    \epsilon \int_{\abs{t}\le \delta} \abs{t D_N(t)} \, dt
+    +
+    \epsilon 2 \esssup_{\T} \abs{f}
+    \le 
+    C \epsilon.
+  \end{displaymath}
+\end{proof}
+
+\begin{Problema}
+  Usando la serie de Fourier de \(\abs{x}\) en \([-\pi, \pi]\), demuestre que
+  \begin{displaymath}
+    \sum_{n=1}^{\infty} \frac{1}{n^2}
+    =
+    \frac{\pi^2}{6}.
+  \end{displaymath}
+\end{Problema}
+\begin{proof}
+  Calculemos los coeficientes. Para \(n\ne 0\) 
+  \begin{alignat*}{1}
+    2\pi \hat f(n) 
+    &= \int_{-\pi}^{\pi} \abs{x} e^{-inx} \, dx
+    \\&= \int_{-\pi}^{0} -x e^{-inx} \, dx
+      + \int_{0}^{\pi} x e^{-inx} \, dx
+    \\&= \int_{0}^{\pi} x (e^{-inx} + e^{inx}) \, dx
+    \\&= 2 \int_{0}^{\pi} x\cos(nx) \, dx
+    \\&= 2 \left(
+      \left[ \frac{x \sin(nx)}{n} \right]_0^{\pi}
+      -
+      \frac{1}{n} \int_{0}^{\pi} \sin(nx)\, dx
+    \right) 
+    \\&=
+    2 \frac{(-1)^{n} - 1}{n^2}
+  \end{alignat*}
+  Mientras que para \(n=0\) nos da \(\hat f(0) = \pi/2\). De esta forma, dado que \(\abs{x}\) es
+  Lipschitz en \(0\), se tiene que 
+  \begin{align*}
+    \abs{0} 
+    &= \frac{\pi}{2} + \frac{2}{\pi} \sum_{n=1}^{\infty} \frac{(-1)^n - 1}{n^2}.
+    \\&= \frac{\pi}{2} - \frac{4}{\pi} \sum_{n=1}^{\infty} \frac{1}{(2n-1)^2}.
+  \end{align*}
+  Despejando tenemos 
+  \begin{displaymath}
+    \sum_{n=1}^{\infty} \frac{1}{(2n-1)^2}
+    =
+    \frac{\pi^2}{8}.
+  \end{displaymath}
+
+  Por otro lado,
+  \begin{displaymath}
+    \sum_{n=1}^{\infty} 
+      \frac{1}{n^2}
+    =
+    \sum_{n=1}^{\infty} 
+      \frac{1}{(2n-1)^2}
+    +
+    \sum_{n=1}^{\infty} 
+      \frac{1}{(2n)^2}
+    =
+    \frac{\pi^2}{8}
+    +
+    \frac{1}{4}
+    \sum_{n=1}^{\infty} 
+      \frac{1}{n^2}
+  \end{displaymath}
+  y despejando se obtiene el resultado.
+\end{proof}
+
+\begin{Problema}
+  Sea \(\alpha \not\in \Z\). Demuestre que la serie de Fourier en \([0,2\pi]\) de
+  \begin{displaymath}
+    \frac{\pi}{\sin(\pi\alpha)} e^{i(\pi-x)\alpha}
+  \end{displaymath}
+  está dada por
+  \begin{displaymath}
+    \sum_{n\in\Z} \frac{e^{inx}}{n+\alpha}.
+  \end{displaymath}
+  Concluya, usando la identidad de Parseval, que
+  \begin{displaymath}
+    \sum_{n\in\Z} \frac{1}{(n+\alpha)^2}
+    =
+    \frac{\pi^2}{(\sin(\pi\alpha))^2}.
+  \end{displaymath}
+\end{Problema}
+\begin{proof}
+  Denotemos a la función por \(f(x)\) y computemos los coeficientes.
+  \begin{alignat*}{1}
+    2\pi \hat f(n)
+    &= 
+    \frac{ e^{i\pi\alpha}\pi }{ \sin(\pi\alpha) }
+    \int_{0}^{2\pi} 
+      e^{-ix(\alpha+n)} \, dx
+    \\&= 
+    - \frac{ e^{i\pi\alpha}\pi }{ i(\alpha+n) \sin(\pi\alpha) } 
+    ( e^{-i2\pi(\alpha+n)} - 1 ) 
+    \\&= 
+    \frac{\pi e^{i\pi\alpha} (e^{-i2\pi(\alpha+n)}-1)}{i(\alpha+n) \sin(\pi\alpha)}
+    \\&= 
+    \frac{2\pi \sin(\pi\alpha)}{(\alpha+n) \sin(\pi\alpha)}.
+  \end{alignat*}
+  Así, la serie de Fourier es
+  \begin{displaymath}
+    \sum_{n\in\Z} \frac{e^{inx}}{\alpha+n}.
+  \end{displaymath}
+
+  Aplicando Parseval tenemos que
+  \begin{displaymath}
+    \sum_{n\in\Z} \frac{1}{(\alpha+n)^2}
+    =
+    \normL{2}{f}^2
+    =
+    \frac{1}{2\pi}
+    \frac{\pi^2}{\sin(\pi\alpha)^2}
+    \int_{0}^{2\pi} 1\, dx
+    =
+    \frac{\pi^2}{\sin(\pi\alpha)^2}
+  \end{displaymath}
+\end{proof}
+
+\begin{Problema}
+\begin{enumerate}
+  \item Demuestre que
+  \begin{displaymath}
+    \int_{0}^{\infty} \frac{\sin(x)}{x} \, dx = \frac{\pi}{2}.
+  \end{displaymath}
+  \textit{Sugerencia:} use que \(\int_{-\pi}^{\pi} D_N(x) \, dx = 1\) y note que
+  \((1/\sin(x/2)) - (2/x)\) es continuo en \([-\pi,\pi]\). Use el lema de Riemann-Lebesgue.  
+\end{enumerate}
+\end{Problema}
+
+\begin{Problema}
+  Sea \(a = (a_n)_{n\in\N}\) una sucesión tal que para todo \(x\in c_0\) se tiene que
+  \(\sum_{n\ge 1} \abs{a_n x_n} \) converge. Demuestre que \(a\in \ell^1\).  
+\end{Problema}
+\begin{proof}
+  Debemos probar que \(\sum_{n\ge 1} \abs{a_n} < \infty\).
+  Consideremos el operador
+  \begin{align*}
+    S_N \colon c_0 &\to \ell^{\infty} 
+    \\ x&\mapsto \sum_{n=1}^{N} a_n x_n.
+  \end{align*}
+  Como son sumas finitas es lineal y acotado. Además, por la propiedad de \(a\) está bien definido. 
+  Por otro lado, \(\sup_{N\in \N} S_N x < \infty\) pues es la propiedad de \(a\). Luego, por 
+  Banach-Steinhaus, \(\sup_{N\in \N} \norm{ S_N x } < \infty\). Dado que
+  \begin{displaymath}
+    S_N (sng(a_n))_{n\le N} = \sum_{n\le N} \abs{a_n}
+  \end{displaymath}
+  se concluye lo pedido.
+\end{proof}
+
+\begin{Problema}
+  Sean \(V,W\) espacios de Banach y \(a\colon V\times W \to \K\) bilineal tal que
+  \begin{itemize}
+    \item para todo \(v\in V\), la función \(w\to a(v,w)\) es continua en \(W\)   
+    \item para todo \(w\in W\), la función \(v\to a(v,w)\) es continua en \(V\)   
+  \end{itemize}
+  Demuestre que existe \(C\ge 0\) tal que para todo \(v\in V\) y \(w\in W\) se tiene que
+  \begin{displaymath}
+    \abs{a(v,w)} \le C \norm{v} \norm{w}.
+  \end{displaymath}
+  Concluya que \(a\) es continua. 
+\end{Problema}
+\begin{proof}
+\begin{displaymath}
+  \norm{a(v,w)} \le \norm{a(,w)} \norm{w} \le \norm{a} \norm{v} \norm{w}.
+\end{displaymath}
+Directo de la cota.
+\end{proof}
+\end{document}

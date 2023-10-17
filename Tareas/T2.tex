@@ -1,0 +1,857 @@
+\documentclass[11pt]{article}
+
+% Page set up
+\usepackage[margin=3cm]{geometry}
+
+% Document font and symbols
+\usepackage{mathptmx} % Times New Roman
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage{esint}
+
+% Language formatting
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish, es-noshorthands]{babel}
+
+% Graph and Drawings
+\usepackage{tikz,tikz-cd,float}
+\usepackage{wrapfig}
+\usetikzlibrary{babel}
+\usepackage{pgfplots}
+\usepackage[framemethod=default]{mdframed}
+\usepackage{framed}
+
+% Tools
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{etoolbox,mathtools}
+\usepackage[shortlabels]{enumitem}
+
+% Mdframed template
+\mdfsetup{innertopmargin=5pt,%
+	frametitlealignment=\raggedright,%
+	frametitlefont=\texttt,%
+	linewidth=2pt,%
+	topline=false,rightline=false, bottomline=false,%
+	frametitleaboveskip=\dimexpr-1\ht\strutbox\relax,}
+
+% Problem Env
+\newcounter{ProblemCounter}
+\newenvironment{Problema}[1][]{%
+	\vspace{1em}
+	\refstepcounter{ProblemCounter}
+  \noindent\tikz{\draw (0,0)--(\linewidth, 0) node[midway,fill=white]{{{\texttt{PROBLEMA}}~\theProblemCounter}};}
+  %\noindent\texttt{PROBLEMA}~\theProblemCounter~
+	}{
+    \ \newline
+    \tikz{\draw (0,0) -- (\linewidth, 0);}
+    \vspace{1em}
+	}
+
+% Solution Env
+\newenvironment{Solucion}[1][]
+{%
+  \newline
+	\noindent{\ttfamily SOLUCIÓN}~
+}%
+{%
+	%\hfill\(\blacksquare\)
+}
+
+% Resize abs and norm
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\|}{\|}
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
+% Shortcuts
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\T}{\mathbb{T}}
+
+\DeclareMathOperator{\esssup}{esssup}
+
+% Header
+\newcommand{\header}[2]
+{
+\begin{minipage}{.15\textwidth}
+	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{LogoUC}
+\end{minipage}
+\hspace{1em}
+\begin{minipage}{.75\textwidth}
+	\vspace{2em}
+	{\scshape
+	Pontificia Universidad Católica de Chile\\
+	Facultad de Matemáticas\\
+	Docente: Nikola Kamburov\\
+	Ayudante: Matías Díaz
+	}
+\end{minipage}
+
+\medskip
+
+\begin{center}
+	{\textbf{MAT2555 {-} Análisis Funcional}} \\[1ex]
+	{{\large Tarea #1 {-} Omar Neyra, Sebastián Sánchez}}
+\end{center}
+
+\medskip
+}
+
+\begin{document}
+
+\header{2}{}
+
+% Problema 1
+\begin{Problema}
+  Sea 
+  \((H, \langle \cdot,\cdot \rangle)\) un espacio de Hilbert y 
+  \(T \in B(H,H)\) un operador lineal acotado.
+  Demuestre que existe un único operador \(T^{\ast} \in B(H,H)\) tal que
+  \begin{displaymath}
+    \langle Tx,y \rangle
+    =
+    \langle x, T^{\ast} y \rangle
+    \qquad
+    \forall x,y\in H.
+  \end{displaymath}
+  El operador \(T^{\ast}\colon H\to H\) se llama el \textbf{operador adjunto} de \(T\).
+  Pruebe que \(T^{\ast}\) satisface 
+  \begin{enumerate}
+    \item \(\norm{T^{\ast}} = \norm{T}\).
+    \item \((T^{\ast})^{\ast} = T\). 
+  \end{enumerate}
+\end{Problema}
+
+  Definamos el operador lineal \(x \mapsto \langle Tx, y \rangle\) para \(y\) fijo. 
+  Luego,
+  \begin{displaymath}
+    \abs{\langle Tx, y \rangle} \le \norm{Tx} \norm{y}
+    \implies \norm{\langle T\cdot, y \rangle} < \infty.
+  \end{displaymath}
+  Así, por el teorema de representación de Riesz se tiene que existe un único \(y^{\ast}\) 
+  tal que
+  \begin{displaymath}
+    \langle Tx, y \rangle = \langle x, y^{\ast} \rangle.
+  \end{displaymath}
+  Definamos \(T^{\ast} y = y^{\ast}\). Por Riesz está bien definido, además, \(T^{\ast}\)
+  es lineal y acotado. En efecto, consideremos \(T^{\ast} 0\), luego,
+  \begin{displaymath}
+    \langle x, T^{\ast} 0 \rangle = \langle Tx, 0 \rangle = 0
+    \quad\forall x\in X
+    \quad\therefore\quad T^{\ast} 0 = 0.
+  \end{displaymath}
+  Por otro lado, si tomamos \(\lambda y_1 + y_2\) tenemos que
+  \begin{align*}
+    \langle x, T^{\ast}( \lambda y_1 + y_2 ) \rangle
+    &=
+    \langle Tx, \lambda y_1 + y_2 \rangle
+    \\&=
+    \langle Tx, \lambda y_1 \rangle
+    +
+    \langle Tx, y_2 \rangle
+    \\&=
+    \overline{\lambda} \langle Tx, y_1 \rangle
+    +
+    \langle Tx, y_2 \rangle
+    \\&=
+    \overline{\lambda} \langle x, T^{\ast} y_1 \rangle
+    +
+    \langle x, T^{\ast} y_2 \rangle
+    \\&=
+    \langle x, \lambda T^{\ast}y_1 + T^{\ast}y_2 ) \rangle.
+  \end{align*}
+  para todo \(x\in X\) y por lo tanto \(T^{\ast}(\lambda y_1 + y_2) = \lambda T^{\ast}y_1 + T^{\ast}y_2\).  
+
+  Ahora veamos que es acotado. Sea \(y\) unitario. Luego, 
+  \begin{displaymath}
+    \norm{T^{\ast} y}^{2}
+    =
+    \abs{\langle T^{\ast} y, T^{\ast} y \rangle}
+    =
+    \abs{\langle T(T^{\ast} y), y \rangle}
+    \le
+    \norm{T(T^{\ast} y)} \norm{y}
+    \le
+    \norm{T} \norm{T^{\ast} y}
+  \end{displaymath}
+  Así que \(\norm{T^{\ast} y} \le \norm{T} \) y por lo tanto \(\norm{T^{\ast}} \le \norm{T} <\infty\).  
+
+  Para ver la unicidad, supogamos que existe otro operador lineal acotado \(S\) 
+  que satisface lo mismo. Luego,
+  \begin{displaymath}
+    \langle x, T^{\ast} y\rangle
+    =
+    \langle x, S y \rangle
+    \implies
+    \langle x, T^{\ast}y - Sy \rangle = 0
+    \quad\forall y\in Y, \forall x\in X.
+  \end{displaymath}
+  Por lo tanto \(T^{\ast} = S\). 
+
+  Ahora veamos el resto.
+  \begin{enumerate}
+    \item Ya tenemos una igualdad. Queda ver el converso, es decir, que \(\norm{T} \le \norm{T^{\ast}}\).
+    Sea \(x\) de norma \(1\). Luego,  
+    \begin{alignat*}{1}
+      \norm{T x}^{2}
+      \\&=
+      \abs{\langle Tx, Tx \rangle}
+      \\&=
+      \abs{\langle x, T^{\ast} (Tx) \rangle}
+      \\&\le
+      \norm{T^{\ast}(Tx)} \norm{x}
+      \\&\le
+      \norm{T^{\ast}} \norm{Tx}
+      \Rightarrow \norm{Tx} \le \norm{T^{\ast}}.
+    \end{alignat*}
+    Tomando supremo se obtiene lo pedido.
+
+    \item Sean \(x,y \in X\times Y\) cualquiera, luego:
+    \begin{displaymath}
+      \langle T^{\ast}x, y \rangle
+      =
+      \overline{ \langle y, T^{\ast}x \rangle }
+      =
+      \overline{ \langle Ty, x \rangle }
+      =
+      \langle x, Ty \rangle.
+    \end{displaymath}
+    Por lo tanto \(T = (T^{\ast})^{\ast}\). 
+  \end{enumerate}
+
+% Problema 2
+\begin{Problema}
+  Sea \((H, \langle \cdot, \cdot \rangle)\) un espacio de Hilbert separable y 
+  \(\lbrace x_n \rbrace_{n\in \N} \subset H\) una sucesión acotada: \(\sup_{n} \norm{x_n} < \infty\).
+  Demuestre que existe un \(x\in H\) y una subsucesión \(\lbrace x_{n_k} \rbrace_{k}\) tal que
+  \begin{displaymath}
+    \lim_{k\to\infty} \langle x_{n_k}, y \rangle
+    =
+    \langle x,y \rangle
+    \quad
+    \forall y\in H.
+  \end{displaymath}
+  Se dice que \(\lbrace x_{n_k} \rbrace\) \textbf{converge débilmente} a \(x\).
+
+  (\textit{Sugerencia:} tome \(y\) igual a cada uno de los miembros de una base
+  ortonormal y ejecute un argumento diagonal).
+
+\end{Problema}
+  Como \(H\) es un espacio de Hilbert separable, existe una base ortonormal 
+  \(\lbrace e_n \rbrace_{n\in \N}\).
+
+  Consideremos la sucesión \(S_1 = \lbrace \langle x_n, e_1 \rangle \rbrace \subset \K\). 
+  Dado que la sucesión \(\left\{ x_n \right\}\) es acotada, la sucesión \(S_1\) es acotada
+  (aplicando Cauchy-Schwarz). Luego, por Heine{-}Borel existe una subsucesión convergente.
+  Denotemos a los elementos de la primera entrada de esa sucesión por \(\lbrace x_{n,1} \rbrace\).
+  i.e.
+  \begin{displaymath}
+    \lbrace \langle x_{n,1}, e_1 \rangle \rbrace_{n} \text{ converge en } \K.
+  \end{displaymath}
+  
+  Consideremos ahora la sucesión \(S_2 = \lbrace \langle x_{n,1}, e_2 \rangle \rbrace\). 
+  Por el mismo argumento anterior existe una subsucesión convergente. 
+  Denotemos a los elementos de \(\lbrace x_{n,1} \rbrace\) en \(S_1\) que aparecen en esta 
+  subsucesión 
+  por \(\lbrace x_{n,2} \rbrace\).
+  Entonces tenemos que 
+  \begin{displaymath}
+    \lbrace \langle x_{n,2}, e_2 \rangle \rbrace_{n} \text{ converge en } \K.
+  \end{displaymath}
+  
+  Inductivamente tendremos sucesiones \(\lbrace x_{n,k} \rbrace\) tales que
+  \begin{displaymath}
+    \lbrace \langle x_{n,k}, e_k \rangle \rbrace_{n} \text{ converge en } \K.
+  \end{displaymath}
+  Digamos que \(\langle x_{n,k}, e_k \rangle \xrightarrow{n\to\infty} \lambda_k\in \K\).
+  Nótese que
+  \begin{displaymath}
+    \langle x_{n,n}, e_k \rangle \xrightarrow{n\to\infty} \lambda_k.
+  \end{displaymath}
+  pues \(\lbrace x_{n,k+1} \rbrace_{n} \subset \lbrace x_{n,k} \rbrace_{n}\).
+
+  Definamos \(x = \sum_{k} \lambda_k e_k \). Afirmamos que \(x\) existe y que 
+  \(\lim_{k\to \infty} \langle x_{n,n}, y \rangle = \langle x, y \rangle\) para todo 
+  \(y\in Y\). 
+
+  \underline{Existencia:} Usaremos que
+  \begin{displaymath}
+    \sum_{k} c_k e_k \in H
+    \iff
+    \lbrace c_k \rbrace_k \in \ell^{2}.
+  \end{displaymath}
+  
+  Veamos entonces que los coeficientes están en \(\ell^{2}\). Consideremos las
+  sumas parciales:
+  \begin{displaymath}
+    \sum_{k \le N} \abs{\lambda_k}^{2}
+    =
+    \sum_{k \le N} \abs{\lim_{n\to\infty} \langle x_{n,n}, e_k \rangle}^{2}
+    =
+    \lim_{n\to\infty} \sum_{k\le N} \abs{\langle x_{n,n}, e_k \rangle}^{2}
+    \le
+    \limsup_{n} \norm{x_{n,n}}^{2}
+    \le
+    \sup_{n} \norm{x_n}^{2}.
+  \end{displaymath}
+  Luego, \(x\) existe.
+
+  \underline{Propiedad:}
+  Sea \(y\in H\). Luego,
+  \begin{displaymath}
+    \abs{ \langle x_{n,n}, v \rangle - \langle x, v \rangle }
+    \le
+    \underbrace{
+    \abs{ 
+      \langle x_{n,n}, \sum_{k\le N} \lambda_{k} e_k \rangle 
+      -
+      \langle x, \sum_{k\le N} \lambda_{k} e_k \rangle
+    }}_{\to 0}
+    +
+    2 
+    \, \underbrace{\sup_{n} x_n}_{\text{acotado}} 
+    \, \underbrace{\norm{v - \sum_{k\le N} \lambda_{k} e_k}}_{\to 0}.
+  \end{displaymath}
+  Por lo tanto se concluye el resultado.
+
+% Problema 3
+\begin{Problema}[Sumabilidad de Abel de la serie de Fourier]
+  Sea \(f \in C(\mathbb{T})\) y sea 
+  \begin{displaymath}
+    f(\theta) \sim \sum_{n\in \Z} \hat f(n) e_{n}(\theta)
+  \end{displaymath}
+  la serie de Fourier de \(f\).
+  \begin{enumerate}[(a)]
+    \item Demuestre que para todo \(r\in [0,1)\) la serie 
+    \begin{displaymath}
+      u(r,\theta) \coloneqq \sum_{n\in \Z} r^{\abs{n}} \hat f(n) e_{n}(\theta)
+    \end{displaymath}
+    define una función \(u(r,\theta) \in C^2([0,1]\times \mathbb{T})\), la cual satisface 
+    la ecuación de Laplace en coordenadas polares \((r,\theta)\):
+    \begin{displaymath}
+      \Delta u 
+      =
+      \left( 
+        \partial_r^2 + \frac{1}{r} \partial_r + \frac{1}{r^2} \partial_{\theta}^2
+      \right) u
+      = 0
+    \end{displaymath}
+    en el disco unitario \(\mathbb{D} = \lbrace 0\le r < 1, \theta \in \mathbb{T} \rbrace\). 
+    
+    \item Pruebe que podemos expresar \(u(r,\theta) = P_r \ast f(\theta)\) como una convolución
+    de \(f\) con el kernel de Poisson
+    \begin{displaymath}
+      P_r(\theta) \coloneqq
+      \frac{1}{2\pi}
+      \sum_{n\in\Z} r^{\abs{n}} e^{in\theta}
+      =
+      \frac{1}{2\pi}
+      \frac{1-r^{2}}{1-2r\cos(\theta) + r^2}.
+    \end{displaymath}
+    
+    \item Demuestre que
+    \begin{displaymath}
+      \lim_{r\to 1} u(r,\theta) = f(\theta)
+    \end{displaymath}
+    uniformemente en \(\theta\). (\textit{Sugerencia:} Verifique que \(\lbrace P_r \rbrace_{r\in[0,1)}\)
+    es una familia de buenos kernels en \(L^1(\mathbb{T})\)). 
+  \end{enumerate}
+\end{Problema}
+\begin{enumerate}[(a)]
+  \item Notar que \(f\) y \(e_n\) son acotadas (son continuas en un compacto). Luego,
+  \begin{displaymath}
+    \abs{u(r,\theta)}
+    \le
+    C \sum_{n\in \Z} r^{\abs{n}}
+    \le
+    2 C \sum_{n \ge 0} r^{n}
+    < \infty
+  \end{displaymath}
+  para alguna constante \(C>0\). 
+  Así, la serie es absoluta y uniformemente convergente. 
+  Luego, podemos derivar la serie término a término. 
+  De esta forma se tiene que
+  \begin{alignat*}{1}
+    \partial_{r} u(r,\theta) &= \sum_{n\in\Z} \abs{n} r^{\abs{n}-1} \hat f(n) e_{n}(\theta)
+    \\
+    \partial_{\theta} u(r,\theta) &= \sum_{n\in\Z} i n e_n(\theta) r^{\abs{n}} \hat f(n)
+  \end{alignat*}
+
+  Dado que (para \(r \ne 0\)) 
+  \begin{alignat*}{1}
+    \sum_{n\in\Z} \abs{n} r^{\abs{n}-1} \hat f(n) e_{n}(\theta)
+    &\le
+    \frac{2C}{r} \sum_{n\ge 0} n r^n
+    \\&\le
+    \frac{2C}{r} \lim_{N\to\infty} \frac{r - (N+1)r^{N+1} + Nr^{N+2}}{(1-r)^2}
+    < \infty
+  \end{alignat*}
+
+  La serie derivada también es absoluta y uniformemenente convergente, así que podemos volver a
+  derivar término a término (el argumento para la serie derivada con respecto a \(\theta\) es análogo).
+  \begin{alignat*}{1}
+    \partial_{r}^2 u(r,\theta) &= \sum_{n\in\Z} \abs{n} (\abs{n}-1) r^{\abs{n}-2} \hat f(n) e_n(\theta)
+    \\
+    \partial_{\theta}^2 u(r,\theta) &= \sum_{n\in\Z} -n^2 e_n(\theta) r^{\abs{n}} \hat f(n)
+  \end{alignat*}
+  Esta serie también es absoluta y uniformemente convergente, por lo tanto, la función \(u\in C^2\). 
+
+  Aplicando la fórmula vemos que
+  \begin{align*}
+    \Delta u 
+    &= \abs{n}(\abs{n}-1) r^{\abs{n}-2} \cdot \star + \abs{n} r^{\abs{n}-2} \cdot\star - \frac{n^2}{r^2} \cdot \star
+    \\&= (\abs{n}^2 r^{\abs{n}-2} - n^2 r^{\abs{n}-2}) \cdot \star
+    \\&= 0
+  \end{align*}
+  donde \(\star = \hat f(n) e_n(\theta)\).
+
+  \item Expandamos los términos:
+  \begin{displaymath}
+    u(r,\theta)
+    =
+    \sum_{n\in\Z} \frac{1}{2\pi} \int_{0}^{2\pi} r^{\abs{n}} f(x) e^{in(\theta-x)} \, dx
+  \end{displaymath}
+  Por TCD podemos cambiar la integral con la serie:
+  \begin{displaymath}
+    u(r,\theta)
+    =
+    \int_{0}^{2\pi} f(x) \sum_{n\in\Z} \frac{1}{2\pi} \cdot r^{\abs{n}} e^{in(\theta-x)} \, dx
+    =
+    (\sum_{n\in\Z} r^{\abs{n}} e^{in\theta}) \ast f (r,\theta).
+  \end{displaymath}
+
+  \item Supongamos momentáneamente que la familia \(\lbrace P_r \rbrace_{r\in[0,1)}\) es de buenos
+  kernels. En tal caso tenemos que
+  \begin{align*}
+    \abs{f(\theta) - u(r,\theta)}
+    &=
+    \abs{
+      \frac{1}{2\pi} 
+      \int_{-\pi}^{\pi} f(\theta) \, dx
+      -
+      \frac{1}{2\pi} 
+      \int_{-\pi}^{\pi} f(\theta-x) r^{\abs{n}} e^{-inx} \, dx
+    }
+    \\&\le
+    \frac{1}{2\pi} 
+    \int_{-\pi}^{\pi} 
+      \abs{f(\theta) - f(\theta-x)} 
+      r^{\abs{n}} e^{-inx} 
+    \, dx
+  \end{align*}
+  De esta forma, tomando una bola alrededor del origen podemos controlar el término
+  con \(f\) por continuidad y el resto lo podemos achicar porque la cola de los kernel
+  se va a cero. Concretamente: dado que \(f\) es continua, para todo \(\epsilon > 0\) existe
+  un \(\delta > 0\) tal que 
+  \begin{displaymath}
+    \abs{x} < \delta \implies \abs{f(\theta) - f(\theta+x)} < \epsilon.
+  \end{displaymath}
+  Por otro lado, para el mismo \(\delta\) se satisface que
+  \begin{displaymath}
+    \int_{\delta \le \abs{x} \le \pi} \abs{P_r(x)}\, dx \xrightarrow{r\to 1} 0.
+  \end{displaymath}
+  De esta forma tenemos que
+  \begin{displaymath}
+    \abs{f(\theta) - u(r,\theta)}
+    \le
+    \epsilon \int_{\abs{x} \le \delta} P_{r}(x) \, dx
+    +
+    \sup_{\mathbb{T}} \abs{f}
+    \int_{\delta \le \abs{x} \le \pi} P_r(x) \, dx.
+  \end{displaymath}
+  Tomando \(r\) suficientemente cercado a \(1\) podemos hacer el término no
+  constante del segundo sumando menor a \(\epsilon\). Notando el que término
+  que acompaña a \(\epsilon\) en el primer sumando está acotado (porque son buenos kernels)
+  concluimos que:
+  \begin{displaymath}
+    \abs{f(\theta) - u(r,\theta)}
+    \le
+    \epsilon C.
+  \end{displaymath}
+
+  \underline{Demostración que \(\lbrace P_r \rbrace_{r\in[0,1)}\) es una familia de buenos kernels:}
+  \begin{enumerate}
+    \item Integra \(1\): Por la convergencia absolutamente uniforme podemos cambiar la integral con 
+    la serie, resultando en
+    \begin{displaymath}
+      \frac{1}{2\pi}
+      \int_{\T} \sum_{n\in\Z} r^{\abs{n}} e^{in\theta} \, dt
+      =
+      \frac{1}{2\pi}
+      \sum_{n\in\Z} r^{\abs{n}} \underbrace{\int e^{in\theta} \, dt}_{=0\text{ si } n\ne 0}
+      =
+      1.
+    \end{displaymath}
+
+    \item Cota absolutamente uniforme: Dado que \(P_{r}(t)\) es positiva,  
+    \begin{displaymath}
+      \int_{\T} \abs{P_r(t)} \, dt
+      =
+      \int_{\T} P_r(t) \, dt = 1.
+    \end{displaymath}
+    para cualquier \(r\). 
+
+    \item Colas se van a cero: Sea \(0 < \delta < \pi/2\). Luego, existe \(r\in(0,1)\) tal que
+    \(\delta = \arccos(r/2)\). Por la identidad dada se sigue que
+    \begin{displaymath}
+      \int_{\delta \le \abs{x} \le \pi} P_r(x)
+      \le
+      \frac{1}{2\pi}
+      \int_{\delta \le \abs{x} \le \pi} \frac{1-r^2}{1+r^2-2r\cos(x)}
+      \le
+      C (1-r^2).
+    \end{displaymath}
+    Similarmente, si \(\delta > \pi/2\) podemos acotar directamente 
+    \begin{displaymath}
+      \int_{\delta \le \abs{x} \le \pi} P_r(x)
+      \le
+      \frac{1}{2\pi}
+      \int_{\pi/2 \le \abs{x} \le \pi} \frac{1-r^2}{1+r^2-2r\cos(x)}
+      \le
+      C (1-r^2).
+    \end{displaymath}
+    En ambos casos, tomando \(r\to 1\) nos da lo pedido.  
+  \end{enumerate}
+\end{enumerate}
+
+% Problema 4
+\begin{Problema}
+  Denote por \(F_N\in L^1(\mathbb{T})\), \(N\in\N\), el kernel de Fejèr. Sea \(\sigma_N f \coloneqq f\ast F_N\).
+  Demuestre que para todo \(p\in [1,\infty]\)
+  \begin{displaymath}
+    \norm{ \sigma_N f }_{L^p(\mathbb{T})}
+    \le
+    \norm{f}_{L^p(\mathbb{T})}
+    \quad\forall f\in L^{p}(\mathbb{T}).
+  \end{displaymath}
+  
+  \textit{Sugerencia:} Utilice la desigualdad de Hölder en estimar
+  \begin{displaymath}
+    \int_{\mathbb T} F_N(y) \, \abs{f(x-y)} \, dy
+    =
+    \int_{\mathbb T} F_N(y)^{1/q} F_N(y)^{1/p} \, \abs{f(x-y)}\, dy
+    \qquad
+    \frac 1 p + \frac 1 q = 1
+  \end{displaymath}
+  en combinación con el \textit{Teorema de Fubini-Tonelli}:
+  \begin{displaymath}
+    \int_{\mathbb T}
+    \left( 
+      \int_{\mathbb T}
+        K(x,y)\, dx
+    \right) \, dy
+    =
+    \int_{\mathbb T}
+    \left( 
+      \int_{\mathbb T}
+        K(x,y)\, dy
+    \right) \, dx
+  \end{displaymath}
+  para toda \(K\colon \mathbb{T}^2 \to [0,\infty]\) Lebesgue medible. 
+\end{Problema}
+\underline{Caso \(1 < p < \infty\)}: Equivalentemente, debemos probar que
+\begin{displaymath}
+  \norm{\sigma_N f}_{p}^{p} \le \norm{f}_{L^p}^p
+\end{displaymath}
+Expandamos el término de la izquierda
+\begin{align*}
+  \norm{\sigma_N f}_{L^p}^{p}
+  &=
+  \int_{\mathbb T}
+    \abs{
+      f\ast F_N (x) 
+    }^p
+  \, dx
+  \\&\le
+  \int_{\mathbb T}
+    \left(
+      \int_{\mathbb T}
+        \abs{f(x-y)} F_N(y)
+      \, dy
+    \right)^p
+  \, dx
+  =
+  \int_{\mathbb T}
+    \left(
+      \int_{\mathbb T}
+        \abs{f(x-y)} F_N(y)^{1/p} F_N(y)^{1/q}
+      \, dy
+    \right)^p
+  \, dx
+\end{align*}
+con \(1/p + 1/q = 1\). Luego, por la desigualdad de Hölder  
+\begin{displaymath}
+  \norm{\sigma_N f}_{L^p}^{p}
+  \le
+  \norm{F_N}_{L^1}^{p/q}
+  \int_{\mathbb T}
+    \int_{\mathbb T}
+      \abs{f(x-y)}^p
+      F_N(y)
+    \, dy
+  \, dx
+\end{displaymath}
+El integrando es medible (\(f\) es medible y \(F_N\) es suave) así que podemos aplicar Tonelli{-}Fubini:
+\begin{displaymath}
+  \norm{\sigma_N f}_{L^p}^{p}
+  \le
+  1\cdot
+  \int_{\mathbb T}
+    F_N(y)
+    \int_{\mathbb T}
+      \abs{f(x-y)}^p
+    \, dx
+  \, dy
+\end{displaymath}
+Como estamos integrando sobre el círculo y la función es periódica, tenemos que  
+\begin{displaymath}
+  \int_{\mathbb T} \abs{f(x-y)}^p \, dx
+  =
+  \int_{\mathbb T} \abs{f(x)}^p \, dx
+  =
+  \norm{f}_{L^p}^{p}
+\end{displaymath}
+Por lo tanto,
+\begin{displaymath}
+  \norm{\sigma_N f}_{L^p}^{p} \le \norm{f}^{p}_{p}.
+\end{displaymath}
+
+\underline{Caso \(p=1\)}: Ya apareció en el cálculo anterior, pero aquí va:
+\begin{displaymath}
+  \norm{\sigma_N f}_{L^1}
+  \le 
+  \int_{\T} \int_{\T} \abs{f(x-y)} F_N(y)\, dy\, dx.
+\end{displaymath}
+Por Tonelli{-}Fubuni y la observación anterior de integrar sobre el círculo tenemos que
+\begin{displaymath}
+  \norm{\sigma_N f}_{L^1}
+  \le
+  \int_{\T} \int_{\T} \abs{f(x-y)} F_N(y)\, dx\, dy
+  \le
+  \norm{f}_{L^1} \underbrace{\norm{F_N}_{L^1}}_{=1}.
+\end{displaymath}
+
+\underline{Caso \(p=\infty\)}:
+\begin{displaymath}
+  \norm{\sigma_N f}_{L^\infty}
+  \le 
+  \esssup_{\T} \int_{\T} \abs{f(x-y)} F_N(y)\, dy.
+\end{displaymath}
+
+% Problema 5
+\begin{Problema}
+  Sea \(f\) una función \(2\pi\){-}periódica en \(\R\) de clase \(C^1\).
+  \begin{enumerate}[(a)]
+    \item Pruebe que \(\hat f'(n) = in \hat f(n)\). Concluya que \(\lim_{\abs{n}\to\infty} \abs{n}\hat f(n) = 0\).  
+    \item Suponga que adicionalmente \(\int_{\T} f(x) dx = 0\). Utilizando la identidad de Parseval,
+    demuestre la \textit{desigualdad de Wirtinger}:
+    \begin{displaymath}
+      \int_{-\pi}^{\pi} \abs{f(x)}^{2} \,dx
+      \le
+      \int_{-\pi}^{\pi} \abs{f'(x)}^{2} \,dx
+    \end{displaymath}
+  \end{enumerate}
+\end{Problema}
+\begin{enumerate}[(a)]
+  \item Haciendo integración por partes tenemos
+  \begin{displaymath}
+    \hat f'(n) 
+    = \frac{1}{2\pi} \int_{-\pi}^{\pi} f'(x) e^{-inx} \, dx
+    = \frac{1}{2\pi} \left[ f(x) e^{-inx} \right]_{-\pi}^{\pi} + in \int_{T} f(x) e^{-inx} \, dx 
+    = in \hat f(n).
+  \end{displaymath}
+  Como \(f'\) es continua, en particular es \(L^1\) integrable. Aplicando Riemann-Lebesgue tenemos:
+  \begin{displaymath}
+    \lim_{\abs{n}\to\infty} 
+      \abs{n} \hat f(n)
+    =
+    \lim_{\abs{n}\to\infty} 
+      \hat f'(n)
+    =
+    0.
+  \end{displaymath}
+
+  \item Por Parseval,
+  \begin{alignat*}{2}
+    \norm{f}_{L^2} 
+    &= \sum_{n\in\Z} \abs{\hat f(n)}
+    &&= \abs{\hat f'(0)} + \sum_{n\in\Z\setminus 0} \frac{\abs{\hat f'(n)}}{n}
+    \\&\le 
+    \sum_{n\in\Z} \abs{\hat f'(n)}
+    &&= \norm{f'}_{L^2}
+  \end{alignat*}
+\end{enumerate}
+
+
+% Problema 6
+\begin{Problema}
+  Considere la función en \(\T\), dada por
+  \begin{displaymath}
+    f(x) =
+    \begin{cases}
+      0 &, \abs{x} > \delta\\
+      1-\abs{x}/\delta &, \abs{x} \le \delta
+    \end{cases}
+    , \delta \in (0,\pi).
+  \end{displaymath}
+  Pruebe que 
+  \begin{displaymath}
+    f(x) 
+    = 
+    \frac{\delta}{2\pi} 
+    + 
+    2 \sum_{n=1}^{\infty} 
+      \frac{ 1-\cos n\delta }{ n^2 \pi \delta } \cos(nx).
+  \end{displaymath}
+\end{Problema}
+Dado que la función está en \(L^2\), se tiene que \(S_N f \to f\). Para \(n\ne 0\) se tiene
+que:
+\begin{displaymath}
+  \hat f(n)
+  = 
+  \frac{1}{2\pi}
+  \int_{\abs{t} \le \delta} f(t) e^{-int}
+  =
+  \frac{1}{2\pi}
+  \left( 
+    \underbrace{ \int_{\abs{t} \le \delta} e^{-int} }_{I}
+    -
+    \frac{1}{\delta}
+    \underbrace{ \int_{\abs{t} \le \delta} \abs{t} e^{-int} }_{J}
+  \right) 
+\end{displaymath}
+
+Computemos \(J\): reordenando la integral y haciendo integración por partes tenenemos 
+\begin{align*}
+  J 
+  &= \int_{-\delta}^{0} -te^{-int} + \int_{0}^{\delta} t e^{-int}
+  \\&= \int_{0}^{\delta} te^{int} + \int_{0}^{\delta} t e^{-int}
+  \\&= \int_{0}^{\delta} t (e^{int} + e^{-int})
+  \\&= 2 \int_{0}^{\delta} t \cos(nt)
+  \\&= 2 \left( 
+    \left[ \frac{t\sin(nt)}{n} \right]_0^{\delta} 
+    - \frac{1}{n} \int_{0}^{\delta} \sin(nt)
+  \right) 
+  \\&= 2 \left( 
+    \frac{\delta \sin(n\delta)}{n}
+    +
+    \frac{\cos(n\delta)-1}{n^2}
+  \right) 
+\end{align*}
+
+Ahora veamos \(I\):
+\begin{displaymath}
+  I 
+  = \int_{-\delta}^{\delta} e^{-int}
+  = \frac{ e^{in\delta} - e^{-in\delta} }{ in }
+  = \frac{ 2\sin(n\delta) } { n }.
+\end{displaymath}
+
+Juntando todo:
+\begin{align*}
+  \hat f(n)
+  &=
+  \frac{1}{2\pi}
+  \left( 
+    \frac{ 2\sin(n\delta) } { n }
+    -
+    \frac{2\sin(n\delta)}{n}
+    -
+    2 \frac{\cos(n\delta)-1}{\delta n^2}
+  \right) 
+  \\&=
+  \frac{1-\cos(n\delta)}{\delta \pi n^2}.
+\end{align*}
+
+Luego, el coeficiente es par (\(\hat f(n) = \hat f(-n)\)), así que
+\begin{displaymath}
+  \sum_{n\in\Z\setminus 0} \hat f(n) e^{inx}
+  =
+  \sum_{n=1}^{\infty} \hat f(n) (e^{inx} + e^{-inx}) 
+  =
+  2 \sum_{n=1}^{\infty} \hat f(n) \cos(nx).
+\end{displaymath}
+
+Finalmente, para \(n=0\) tenemos que
+\begin{displaymath}
+  \hat f(0) 
+  = \frac{1}{2\pi} \int_{\abs{t} \le \delta} (1 - \abs{t}/\delta)
+  = \frac{1}{2\pi} (2\delta - \frac{2}{\delta} \frac{\delta^2}{2})
+  = \frac{\delta}{2\pi}.
+\end{displaymath}
+
+Así, concluimos que
+\begin{displaymath}
+  f(x) = \frac{\delta}{2\pi} + 2\sum_{n=1}^{\infty} \frac{1-\cos(n\delta)}{n^2\delta n} \cos(nx).
+\end{displaymath}
+
+
+
+% Problema 7
+\begin{Problema}
+  Sea \(X\) un espacio normado y \(J\subset X\). Demuestre que 
+  \(\lbrace f(x) \colon x \in J \rbrace\) es acotado para todo funcional lineal acotado
+  \(f\in X'\) si y solo si \(J\) es acotado.
+  \begin{displaymath}
+    \exists M>0, \quad \norm{x} \le M \text{ para todo } x\in J.
+  \end{displaymath}
+\end{Problema}
+\framebox{\(\Rightarrow\)}
+Consideremos el funcional evaluación \(f_x\colon X' \to \K, f_x(x') = x'(x)\). 
+Por Hahn{-}Banach este operador es una isometría.
+Luego, \(\norm{x} = \norm{f_x(x')} < \infty\) para todo \(x\in X\). 
+Aplicando Banach{-}Steinhaus sobre el conjunto \(J\) tenemos que 
+\begin{displaymath}
+  \sup_{x\in J} \norm{x} = \sup_{x\in J} \norm{f_x} < \infty.
+\end{displaymath}
+
+\framebox{\(\Leftarrow\)} Supongamos que \(J\) es acotado. Sea \(x' \in X'\) un funcional
+lineal acotado. Luego, para \(x\in J\) se tiene que 
+\(\norm{x'(x)} \le \norm{x'} \norm{x} < \infty\) porque el funcional
+es acotado y \(\norm{x} \le \sup_{x\in J} \norm{x} < \infty\) por hipótesis.
+
+% Problema 8
+\begin{Problema}
+  Sean \(X,Y\) dos espacios de Banach y \(\lbrace T_n \rbrace_n \subset B(X,Y)\) una sucesión
+  de operadores lineales acotados. Suponga que para todo \(x\in X\) el límite
+  \(Tx \coloneqq \lim_{n\to\infty} T_n x\) existe. Pruebe que si \(x_n \to x\), entonces
+  \(T_n x_n \to Tx\) para todo \(x\in X\).  
+\end{Problema}
+
+Por un corolario de Banach{-}Steinhaus visto en clases, el operador \(T\) es lineal y acotado.
+Veamos la convergencia:
+\begin{displaymath}
+  \norm{ Tx - T_n x_n}
+  \le
+  \norm{ Tx - T_n x} + \norm{ T_n x - T_n x}
+\end{displaymath}
+Por la convergencia puntual, existe \(N_0\) tal que \(\norm{ Tx - T_n x } < 1/N_0\)
+para \(n>N_0\). Por otro lado, el operador \(T_n\) es lineal y acotado, así que
+\(\norm{T_n y} \le \norm{T_n} \norm{y}\); además, como \(x_n \to x\), existe \(N_1\) tal que
+\(\norm{ x - x_n } < 1/N_1\). Así, tomando \(N \ge \max(N_0, N_1)\) se tiene que
+\begin{displaymath}
+  \norm{ Tx - T_n x_n}
+  \le
+  \norm{ Tx - T_n x} + \norm{ T_n x - T_n x}
+  \le
+  \frac{1}{N} + \frac{1}{N} \norm{T_n}
+  \qquad\forall n \ge N.
+\end{displaymath}
+También por Banach{-}Steinhaus, \(\sup_{n\in \N} \norm{T_n} < M\) para algún \(M < \infty\).
+Así, tomando \(N\to \infty\) se tiene lo pedido. 
+\begin{displaymath}
+  \norm{ Tx - T_n x_n} \le \frac{1}{N} (M+1) \xrightarrow{N\to\infty} 0.
+\end{displaymath}
+
+
+
+\end{document}
