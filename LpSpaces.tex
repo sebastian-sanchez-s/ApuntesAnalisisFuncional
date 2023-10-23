@@ -1,0 +1,109 @@
+\documentclass{article}
+
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{mathtools}
+\usepackage{tikz}
+
+\newtheorem{Teorema}{Teorema}
+\newtheorem{Lema}{Lema}
+\newtheorem{Proposicion}{Proposición}
+\newtheorem{Corolario}{Corolario}
+
+\theoremstyle{plain}
+\newtheorem{Problema}{Problema}
+
+\theoremstyle{definition}
+\newtheorem{Definicion}{Definición}
+
+\newcommand{\T}{\mathbb{T}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\F}{\mathcal{F}}
+
+\DeclareMathOperator{\esssup}{esssup}
+
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\newcommand{\normL}[2]{\lVert #2 \rVert_{L^#1}}
+
+\begin{document}
+
+\noindent\tikz{
+\draw (0,0)--(\linewidth, 0) 
+node[midway,above,fill=white]{\Large Espacios de Lebesgue};}
+\newline
+
+De aquí en adelante \((\Omega,\mathca{F},\mu)\) es un espacio de medida. Si se requieren
+más se pondrán subíndices.
+
+Recordamos que \(\mathcal{L}^{p}(\mu)\) es el conjunto de funciones medibles
+\(p\)-integrables. La función \(\norm{\cdot}_p\) define una seminorma y tomando
+\(\mathcal{N}(\mu)\) como las funciones que se anulan casi en todas partes podemos definir
+el espacio
+\begin{displaymath}
+  L^p(\mu) \coloneqq \mathcal{L}^p(\mu) / \mathca{N}(\mu)
+\end{displaymath}
+que sí es un espacio normado con la norma \(\norm{\cdot}_{p}\). De hecho, es un espacio de Banach.
+
+\begin{Teorema}[Riesz-Fischer]
+  \(L^p(\mu)\) es un espacio de Banach. 
+\end{Teorema}
+\begin{proof}
+  Vamos a probar que todas las series absolutamente sumables son sumables.
+
+  \underline{Caso \(1\le p < \infty\):}
+  Sea \((f_n)_{n\in\N}\) con \(f_n\in L^{p}(\mu)\) tal que
+  \begin{equation}\label{eq:1}
+    \sum_{n\in\N} \norm{f_n}_{p} \le M < \infty.
+  \end{equation}
+  Consideremos las sumas parciales puntuales \(G_n(x) = \sum_{k=1}^{n} \abs{f_k(x)}\). Nótese
+  que son no negativas y crecientes. Además, \(G_n\) es una suma finita de funciones medibles,
+  así que es medible. Por otro lado, \(G_n(x) \uparrow \sum_{n\ge 1} \abs{f_n(x)} \eqqcolon G(x)\)
+  que está dominada por la serie en~\eqref{eq:1}. Así, por el Teorema de Convergencia Dominada
+  (TCD) tenemos que
+  \begin{equation}
+    \lim_{n\to\infty} \int G_n(x) \, d\mu
+    =
+    \int G(x) \, d\mu.
+  \end{equation}
+  En particular,
+  \begin{equation}
+    \lim_{n\to\infty} \int G_n(x)^p \, d\mu
+    =
+    \int G(x)^p \, d\mu
+    \eqqcolon I.
+  \end{equation}
+  Y por lo tanto \(I\le M^p\) pues basta tomar límite en la expresión:
+  \begin{displaymath}
+    \left( \int G_n(x)^p \right)^{1/p}
+    =
+    \norm{G_n}_p
+    \le 
+    \sum_{n\in\N} \norm{f_n}_{p} \le M < \infty.
+  \end{displaymath}
+  Esto nos dice que \(G^p \in L^1(\mu)\) y juntándolo con lo anterior concluimos que 
+  \(0\le G^p < \infty\) \(\mu\)-ctp. De esta forma, el candidato a límite de la serie
+  es
+  \begin{equation}
+    F(x) = 
+    \begin{cases}
+      \sum_{n\in\N} f_n(x) &, G(x) < \infty\\
+      0 &, e.o.c
+    \end{cases}
+  \end{equation}
+  Dado que \(\abs{F(x)} \le G(x)\), \(F\in L^{p}(\mu)\). Además, \(F\) es medible porque TODO.
+  Queda ver la convergencia. Dado que \(\abs{F(x) - \sum_{k=1}^{n} f_k(x)}\) está dominado
+  por \(G\) para cada \(x\), en particular \(\abs{F(x) - \sum_{k=1}^{n} f_k(x)}^p\)
+  está dominado por \(G^p\). Luego, por TCD nos queda
+  \begin{equation}
+    \lim_{n\to\infty}
+    \int \abs{F(x) - \sum_{k=1}^{n} f_k(x)}^p
+    =
+    0.
+  \end{equation}
+\end{proof}
+
+\end{document}
