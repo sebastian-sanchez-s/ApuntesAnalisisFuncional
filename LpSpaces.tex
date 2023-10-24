@@ -5,6 +5,8 @@
 \usepackage{mathtools}
 \usepackage{tikz}
 
+\usepackage{bbm}
+
 \newtheorem{Teorema}{Teorema}
 \newtheorem{Lema}{Lema}
 \newtheorem{Proposicion}{Proposición}
@@ -16,12 +18,15 @@
 \theoremstyle{definition}
 \newtheorem{Definicion}{Definición}
 
+\newcommand{\1}[1]{\mathbbm{1}\left\{ #1 \right\}}
+
 \newcommand{\T}{\mathbb{T}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\F}{\mathcal{F}}
+\newcommand{\K}{\mathbb{K}}
 
 \DeclareMathOperator{\esssup}{esssup}
 
@@ -105,5 +110,125 @@ que sí es un espacio normado con la norma \(\norm{\cdot}_{p}\). De hecho, es un
     0.
   \end{equation}
 \end{proof}
+
+\subsection*{El Teorema de Representación de Riesz}
+
+Sea \(1\le p \le \infty\) y \(q\) su exponente conjuntado (\(1/q+1/p = 1\)). Definamos
+\begin{equation}
+\begin{aligned}
+  \langle \cdot,\cdot \rangle\colon L^p(\mu)\times L^q(\mu) &\to \K\\
+  f,g &\mapsto \int fg\, d\mu.
+\end{aligned}
+\end{equation}
+Notar que el mapa está bien definido, en efecto, aplicando Hölder:
+\begin{displaymath}
+  \int \abs{fg} \, d\mu \le \norm{f}_p \norm{g}_q < \infty.
+\end{displaymath}
+Esto nos permite definir un funcional lineal en \(L^p(\mu)\) para cada elemento de 
+\(L^q(\mu)\) dado por:
+\begin{displaymath}
+  l_{g}f \coloneqq \langle f,g \rangle.
+\end{displaymath}
+La linealidad viene por la linelidad de la integral y \(\norm{l_g}_{(L^p(\mu))'} \le \norm{g}_{q}\). 
+Más aún, el mapa \(\Phi\colon L^q(\mu) \to (L^p(\mu))'\) dado por \(g\mapsto l_g\) es lineal,
+acotado e inyectivo.
+
+\begin{Teorema}[Representación de Riesz]
+  Supongamos que \((\Omega,\mathcal{F},\mu)\) es \(\sigma\)-finito. Si \(1\le p < \infty\), entonces
+  \(\Phi\) es un isomorfismo isométrico. 
+\end{Teorema}
+
+El resto de esta sección está dedicada a probar este teorema. Algunas consecuencias:
+\begin{enumerate}
+  \item \((\ell^p)' \cong \ell^q\), esto es sale del teorema al poner el espacio de medida
+  \((\N,\mathcal{P}(\N),\mu)\) donde \(\mu\) es la medida de contar. 
+  \item 
+\end{enumerate}
+
+\begin{Teorema}[Radon-Nikodýn]
+  Sean \(\mu,\nu\) medidas \(\sigma\)-finitas tal que \(\nu \ll \mu\). Entonces existe una única
+  función \(h\) no negativa medible tal que \(\nu(E) = \int_{E} h\, d\mu\).  
+\end{Teorema}
+
+Recordar que como casi todo en medida, la unicidad es \(\mu\)-ctp al igual que lo es la no negatividad. 
+Por otro lado, nótese que el teorema es válido para funciones a valores reales. No obstante, considerando
+la parte real e imaginaria se puede extender a valores complejos. Por último, 
+se usa la notación \(h = [\frac{d\nu}{d\mu}]\) y se dice que \(h\) es la derivada de Radon-Nikodýn. 
+
+\begin{proof}
+  La demostración se divide en dos pasos. En primer lugar lo probaremos para medidas finitas, y luego
+  lo extendemos para medidas \(\sigma\)-finitas. El argumento de usar la Representación de Riesz
+  para espacios de Hilbert se atribuye a Von Neumann.
+
+  \underline{Paso I:} Supongamos que \(\mu\) y \(\nu\) son finitas. Consideremos la medida
+  \(\lambda = \mu + \nu\). Notar que \(\lambda(E) = 0 \iff \mu(E) = 0\) pues \(\nu \ll \mu\).
+  Consideremos el mapa 
+  \begin{align*}
+    l \colon L^{2}(\lambda) &\mapsto \R\\
+    f &\mapsto \int f \, d\mu.
+  \end{align*}
+  El mapa es lineal por la linealidad de la integral y es acotado porque \(\mu\) es finita
+  .i.e. \(\norm{l} \le \mu(\Omega)^{1/2}\). Así, por el Teorema de Representación de Riesz para 
+  espacios de Hilbert, existe un único \(g\in L^{2}(\lambda)\) tal que
+  \begin{displaymath}
+    \int f \, d\mu = \int fg\, d\lambda
+    \quad\forall f\in L^2(\lambda).
+  \end{displaymath}
+  Como las medidas son finitas, se sigue que
+  \begin{equation}\label{eq:RN:proof1}
+    \int f(1-g)\, d\mu = \int fg \, d\nu
+    \quad\forall f\in L^2(\lambda).
+  \end{equation}
+  Notar que \(0 < g \le 1\) \(\lambda\)-ctp (que es lo mismo que \(\mu\)-ctp). En efecto,
+  \begin{align*}
+    \mu(\left\{ g \le 0 \right\})
+    &\le
+    \int \1{g \le 0} \, d\mu
+    \\&\le
+    \int \1{g \le 0} (1-g) \, d\mu
+    \\&\overset{\eqref{eq:RN:proof1}}{=}
+    \int \1{g \le 0} g d\nu
+    \le 0.
+  \end{align*}
+  De manera similar,
+  \begin{displaymath}
+    0 >
+    \int \1{1-g < 0} (1-g) \, d\mu
+    =
+    \int \1{1-g < 0} g \, d\nu
+    \ge 0.
+  \end{displaymath}
+  Así que podemos tomar un representa que esté estrictamente entre \(0 < g \le 1\) y 
+  podemos definir \(h = \frac{1-g}{g}\). Sea \(E\) un conjunto medible y definamos la sucesión
+  de funciones \(f_n \coloneqq \1{E\cap\left\{ g\ge 1/n \right\}} \frac{1}{g}\). Como la medida
+  es finita, \(f_n\in L^2(\lambda)\) y aplicando la Ecuación~\eqref{eq:RN:proof1} nos queda
+  \begin{displaymath}
+    \int f_n (1-g) \, d\mu = \int f_n g \, d\nu,
+  \end{displaymath}
+  es decir,
+  \begin{displaymath}
+    \int_{E\cap \left\{ g \ge 1/n \right\}} \frac{1-g}{g} \, d\mu
+    =
+    \int_{E\cap \left\{ g \ge 1/n \right\}} \, d\nu.
+  \end{displaymath}
+  Dado que \(E\cap \left\{ g\ge 1/n \right\} \uparrow E\), se sigue el resultado.
+  
+  \underline{Paso 2:} Supogamos ahora que \(\mu\) y \(\nu\) son \(\sigma\)-finitas. Sean 
+  \(\Omega_n\) tal que \(\Omega_n \uparrow \Omega\) y cada uno tiene medida finita.
+  Por lo anterior, para cada \(n\) existe una función \(h_n\) tal que
+  \(\nu(E) = \int h_n \1{E} \, d\mu\) con \(E \in \mathcal{F}\cap \Omega_n \eqqcolon S_n\). 
+  Además, \(\nu(E) = \int h_{n+1} \1{E} \, d\mu\) pues \(\Omega_n \subset \Omega_{n+1}\). Se sigue
+  que \(h_{n+1}\vert_{\Omega_n} = h_n\) (igualdad ctp). Extendamos cada \(h_n\) por cero fuera
+  de \(\Omega_n\). Nótese que \(h_n\) sigue siendo \(S_n\) medible. Definamos
+  \(h = \lim_{n\to \infty} h_n\). Es claro que \(h_n \uparrow h\) y para todo \(E\) \(\mathcal{F}\)    
+  medible se tiene que \(\nu(E) = \lim_{n\to\infty} \nu(\Omega_n\cap E)\). Usando TCM concluimos que
+  \begin{displaymath}
+    \nu(E) 
+    = \lim_{n\to\infty} \int_{E\cap\Omega_n} h_n \, d\mu
+    = \lim_{n\to\infty} \int_{E\cap\Omega} h \, d\mu
+    = \int_{E} h \, d\mu.
+  \end{displaymath}
+\end{proof}
+
 
 \end{document}
