@@ -4,6 +4,7 @@
 \usepackage{amsmath, amsthm, amssymb}
 \usepackage{mathtools}
 \usepackage{tikz}
+\usepackage{enumitem} 
 
 \usepackage{bbm}
 
@@ -18,7 +19,7 @@
 \theoremstyle{definition}
 \newtheorem{Definicion}{Definición}
 
-\newcommand{\1}[1]{\mathbbm{1}\left\{ #1 \right\}}
+\newcommand{\1}[1]{\mathbbm{1}\left( #1 \right)}
 
 \newcommand{\T}{\mathbb{T}}
 \newcommand{\C}{\mathbb{C}}
@@ -129,8 +130,8 @@ Esto nos permite definir un funcional lineal en \(L^p(\mu)\) para cada elemento 
 \begin{displaymath}
   l_{g}f \coloneqq \langle f,g \rangle.
 \end{displaymath}
-La linealidad viene por la linelidad de la integral y \(\norm{l_g}_{(L^p(\mu))'} \le \norm{g}_{q}\). 
-Más aún, el mapa \(\Phi\colon L^q(\mu) \to (L^p(\mu))'\) dado por \(g\mapsto l_g\) es lineal,
+La linealidad viene por la linelidad de la integral y \(\norm{l_g}_{(L^p(\mu))^{\ast}} \le \norm{g}_{q}\). 
+Más aún, el mapa \(\Phi\colon L^q(\mu) \to (L^p(\mu))^{\ast}\) dado por \(g\mapsto l_g\) es lineal,
 acotado e inyectivo.
 
 \begin{Teorema}[Representación de Riesz]
@@ -140,7 +141,7 @@ acotado e inyectivo.
 
 El resto de esta sección está dedicada a probar este teorema. Algunas consecuencias:
 \begin{enumerate}
-  \item \((\ell^p)' \cong \ell^q\), esto es sale del teorema al poner el espacio de medida
+  \item \((\ell^p)^{\ast} \cong \ell^q\), esto es sale del teorema al poner el espacio de medida
   \((\N,\mathcal{P}(\N),\mu)\) donde \(\mu\) es la medida de contar. 
   \item 
 \end{enumerate}
@@ -230,5 +231,30 @@ se usa la notación \(h = [\frac{d\nu}{d\mu}]\) y se dice que \(h\) es la deriva
   \end{displaymath}
 \end{proof}
 
+\begin{Definicion}[Operador Positivo]
+  Decimos que \(t \in (L^p_{\R})^{\ast}\) es positivo si \(t(f) \ge 0\) para todo \(f\in L^{p}_{\R}\).  
+\end{Definicion}
+
+\begin{Teorema}[Descomposición de Funcionales]
+  Sea \(t\in (L^{p}_{\R})^{\ast}\) con \(1\le p< \infty\), entonces 
+  \(t = t_{+} - t_{-}\) con \(t_{\pm}\) un funcional positivo.  
+\end{Teorema}
+\begin{Demostracion}
+\begin{enumerate}[label={Paso~\theenumi:}]
+  \item Definamos \(t_{+}\) para funciones positivas \(f\in L^{p}_{\R}\) como
+  \begin{displaymath}
+    t_{+} \coloneqq \sup_{0 \le g \le f} t(g).
+  \end{displaymath}
+  Vamos a probar que \(t_{+}\) es lineal. Observemos que
+  si \(0\le g \le f\) entonces \(t(g) \le t(f)\). Sean \(f_1,f_2 \in L^{p}_{\R}\). Sean 
+  \(0 \le g_i \le f_i\). Luego, \(t(g_i) \le t(f_i)\) y por lo tanto
+  \(\sup_{0\le g_i \le f_i} t(g_i) \le t(f_i)\). Sumando ambos términos y tomando
+  supremo sobre los \(0 \le h \le f_1 + f_2\) nos queda:
+  \begin{displaymath}
+    t_{+}(f_1) + t_{+}(f_2) \le t_{+}(f_1 + f_2).
+  \end{displaymath}
+\end{enumerate}
+  
+\end{Demostracion}
 
 \end{document}

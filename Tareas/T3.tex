@@ -1,0 +1,192 @@
+\documentclass[11pt]{article}
+
+% Page set up
+\usepackage[margin=3cm]{geometry}
+
+% Document font and symbols
+\usepackage{mathptmx} % Times New Roman
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage{esint}
+
+% Language formatting
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish, es-noshorthands]{babel}
+
+% Graph and Drawings
+\usepackage{tikz,tikz-cd,float}
+\usepackage{wrapfig}
+\usetikzlibrary{babel}
+\usepackage{pgfplots}
+\usepackage[framemethod=default]{mdframed}
+\usepackage{framed}
+
+% Tools
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{etoolbox,mathtools}
+\usepackage[shortlabels]{enumitem}
+
+% Mdframed template
+\mdfsetup{innertopmargin=5pt,%
+	frametitlealignment=\raggedright,%
+	frametitlefont=\texttt,%
+	linewidth=2pt,%
+	topline=false,rightline=false, bottomline=false,%
+	frametitleaboveskip=\dimexpr-1\ht\strutbox\relax,}
+
+% Problem Env
+\newcounter{ProblemCounter}
+\newenvironment{Problema}[1][]{%
+	\vspace{1em}
+	\refstepcounter{ProblemCounter}
+  \noindent\tikz{\draw (0,0)--(\linewidth, 0) node[midway,fill=white]{{{\texttt{PROBLEMA}}~\theProblemCounter}};}
+	}{
+    \newline
+    \noindent\tikz{\draw (0,0) -- (\linewidth, 0);}
+	}
+
+% Solution Env
+\newenvironment{Solucion}[1][]
+{%
+  \newline
+	\noindent{\ttfamily SOLUCIÓN}~
+}%
+{%
+	%\hfill\(\blacksquare\)
+}
+
+% Resize abs and norm
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\|}{\|}
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
+% Shortcuts
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\T}{\mathbb{T}}
+
+\DeclareMathOperator{\esssup}{esssup}
+
+% Header
+\newcommand{\header}[1]
+{
+\begin{minipage}{.15\textwidth}
+	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{LogoUC}
+\end{minipage}
+\hspace{1em}
+\begin{minipage}{.75\textwidth}
+	\vspace{2em}
+	{\scshape
+	Pontificia Universidad Católica de Chile\\
+	Facultad de Matemáticas\\
+	Docente: Nikola Kamburov\\
+	Ayudante: Matías Díaz
+	}
+\end{minipage}
+
+\medskip
+
+\begin{center}
+	{\textbf{MAT2555 {-} Análisis Funcional}} \\[1ex]
+	{{\large Tarea #1 {-} Omar Neyra, Sebastián Sánchez}}
+\end{center}
+
+\medskip
+}
+
+\begin{document}
+
+\header{3}
+
+% Problema 1
+\begin{Problema}
+  Sea \((\Omega, M, \mu)\) un espacio de medida y suponga que \(f\in L^{p_0}(\mu)
+  \cap L^{\infty}(\mu)\) para algún \(p_0 \in [1,\infty)\). Pruebe que
+  \(f\in L^p\) para todo \(p\ge p_0\) y que 
+  \begin{displaymath}
+    \norm{f}_{\infty} = \lim_{p\to\infty} \norm{f}_{p}.
+  \end{displaymath}
+\end{Problema}
+\begin{Solucion}
+  El caso \(p = p_0\) es directo, así que supongamos que la desigualdad es estricta y 
+  denotemos \(p' \coloneqq p - p_0 > 0\). Notando que \(\abs{f(x)} \le \norm{f}_{\infty}\) 
+  tenemos que
+  \begin{equation}
+    \int \abs{f}^{p} 
+    =
+    \int \abs{f}^{p_0} \abs{f}^{p'}
+    \le
+    \int \abs{f}^{p_0} \norm{f}_{\infty}^{p'}
+    \le
+    \norm{f}_{\infty}^{p'} \norm{f}_{p_0}^{p_0}
+  \end{equation}
+  Todas las cantidades son positivas, así que tomando raíz obtenemos que
+  \begin{equation}
+    \norm{f}_{p} \le \norm{f}_{\infty}^{p'/p} \norm{f}_{p_0}^{p_0/p} < \infty,
+  \end{equation}
+  pues la norma uniforme y \(p_0\) están acotadas. Tomando límite se ve directamente que
+  \begin{equation}
+    \lim_{p\to\infty} \norm{f}_{p} \le \norm{f}_{\infty}
+  \end{equation}
+  pues \(p'/p = 1 - p_0/p \to 1\) y \(p_0/p \to 0\) cuando \(p\to \infty\).   
+\end{Solucion}
+
+% Problema 2
+\begin{Problema}
+  Para todo \(a\in\R\) construya una función \(f_a \in L^{\infty}(\R)\) con
+  \(\norm{f_a - f_b}_{L^{\infty}(\R)} \ge 1\) cuando \(a\ne b\). Demuestre que esto implica
+  que \(L^{\infty}(\R)\) no es separable. 
+\end{Problema}
+\begin{Solucion}
+  Consideremos \(f_a(x) = \sin(a x)\). Como \(-1 \le \sin \le 1\), \(f_a \in L^{\infty}\)
+  para todo \(a\). Por otro lado, \(f_a \ge \frac{\sqrt{2}}{2}\) para
+  \begin{equation}\label{p2:1}
+    x\in \frac{1}{a} \left( \frac{\pi}{2} + 2\pi k - \frac{\pi}{4}, \frac{\pi}{2} + 2\pi k + \frac{\pi}{4} \right)
+    \text{, con } \(k\in\Z\). 
+  \end{equation}
+  Similarmente, \(f_a \le - \frac{\sqrt{2}}{2}\) cuando
+  \begin{equation}\label{p2:2}
+    x\in \frac{1}{a} \left( \frac{3\pi}{2} + 2\pi k - \frac{\pi}{4}, \frac{3\pi}{2} + 2\pi k + \frac{\pi}{4} \right)
+    \text{, con } \(k\in\Z\). 
+  \end{equation}
+  Llamemos a los intervalos \(I^a\) y \(I_{a}\) de las Ecuaciones~\eqref{p2:1} y~\eqref{p2:2},
+  respectivamente.
+\end{Solucion}
+
+% Problema 3
+\begin{Problema}
+  Suponga que el espacio de medida \((\Omega, M, \mu)\) es \(\sigma\)-finito. Decimos
+  que una sucesión \(f_n \in L^p\) \textit{converge débilmente} a \(f\in L^p\) si
+  \(c(f_n) \to c(f)\) para todo \(c\in (L^p)^{\ast}\). Escribimos \(f_n \rightharpoonup f\)
+  en \(L^p\).
+  \begin{enumerate}[(a)]
+    \item Demuestre que \(f_n \rightharpoonup f\) en \(L^p\), \(p\in[1,\infty)\), si y solo
+    si 
+    \begin{displaymath}
+      \int f_n g \to \int fg 
+    \end{displaymath}
+    para toda \(g\in L^{q}\), con \(1/p + 1/q = 1\).  
+
+    \item 
+    Pruebe que cuando \(f_n \rightharpoonup f\) en \(L^p\), \(\norm{f}_{p} \le \liminf_{n\to\infty} \norm{f_n}_{p}  \)   
+
+    \item
+    (Compacidad débil de \(L^p\)) Sea \(p\in (1,\infty)\) y suponga que \(L^q\) es separable.
+    Pruebe que si \(\sup_{n} \norm{f_n}_{p} < \infty\), entonces existe \(f\in L^{p}\) y una
+    sucesión \(f_{n_k} \in L^p\) tal que \(f_{n_k} \rightharpoonup f\).  
+
+    \item De un contraejemplo del ítem anterior cuando \(p=1\). 
+  \end{enumerate}
+\end{Problema}
+
+\end{document}
