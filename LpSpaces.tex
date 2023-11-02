@@ -134,10 +134,12 @@ La linealidad viene por la linelidad de la integral y \(\norm{l_g}_{(L^p(\mu))^{
 Más aún, el mapa \(\Phi\colon L^q(\mu) \to (L^p(\mu))^{\ast}\) dado por \(g\mapsto l_g\) es lineal,
 acotado e inyectivo.
 
-\begin{Teorema}[Representación de Riesz]
-  Supongamos que \((\Omega,\mathcal{F},\mu)\) es \(\sigma\)-finito. Si \(1\le p < \infty\), entonces
-  \(\Phi\) es un isomorfismo isométrico. 
-\end{Teorema}
+\begin{center}
+\framebox{\parbox{0.8\textwidth}{
+  El teorema de Representación de Riesz afirma que el mapa \(\Phi\) es un isomorfismo
+  isométrico para medidas \(\sigma\)-finitas y \(1\le p < \infty\). 
+}}
+\end{center}
 
 El resto de esta sección está dedicada a probar este teorema. Algunas consecuencias:
 \begin{enumerate}
@@ -239,9 +241,9 @@ se usa la notación \(h = [\frac{d\nu}{d\mu}]\) y se dice que \(h\) es la deriva
   Sea \(t\in (L^{p}_{\R})^{\ast}\) con \(1\le p< \infty\), entonces 
   \(t = t_{+} - t_{-}\) con \(t_{\pm}\) un funcional positivo.  
 \end{Teorema}
-\begin{Demostracion}
-\begin{enumerate}[label={Paso~\theenumi:}]
-  \item Definamos \(t_{+}\) para funciones positivas \(f\in L^{p}_{\R}\) como
+\begin{proof}
+  \underline{Paso 1: \(t_+\) para funciones no negativas.}
+  Definamos \(t_{+}\) para funciones no negativas \(f\in L^{p}_{\R}\) como
   \begin{displaymath}
     t_{+} \coloneqq \sup_{0 \le g \le f} t(g).
   \end{displaymath}
@@ -253,8 +255,214 @@ se usa la notación \(h = [\frac{d\nu}{d\mu}]\) y se dice que \(h\) es la deriva
   \begin{displaymath}
     t_{+}(f_1) + t_{+}(f_2) \le t_{+}(f_1 + f_2).
   \end{displaymath}
-\end{enumerate}
+  Para la otra igualdad, notemos que si \(0\le g \ge f_1 + f_2\), entonces podemos
+  escribir \(g = g_1 + g_2\) con \(g_1 = \min(g,f_1)\) y \(g_2 = g - g_1\). 
+  Es directo \(g_1 \le f_1\), ¿es cierto que \(g_2 \le f_2\)? sí, basta ver los 
+  casos para \(g_2 = g\) y \(g_2 = f_1\). En el primero tenemos que \(g_2 = 0 \le f_2\)
+  mientras que para el segundo \(g_2 = g - f_1 \le f_2\) por cómo tomamos a \(g\).
+  De esta forma, concluimos que:
+  \begin{displaymath}
+    t(g) \le t_{+}(f_1) + t_{+} (f_2)
+    \therefore
+    t(f_1 + f_2) \le t_{+}(f_1) + t_{+}(f_2).
+  \end{displaymath}
+
+  \underline{Paso 2: \(t_+\) para funciones con signo.} Recordamos que \(f\in L^p\)
+  se pude escribir como \(f = f_{+} - f_{-}\) donde \(f_{+} = \max(0,f)\) y \(f_{-} = \max(0,-f)\).   
+  Definimos entonces \(t_{+}(f) \coloneqq t_{+}(f_{+}) - t_{+}(f_{-})\).
+
+  \underline{Paso 3: verificar que \(t_+\) es lineal.}
+  Sean \(f,g\in L^p\). Luego,
+  \begin{align*}
+    t_{+} (f+g) 
+    &=
+    t_+ ( (f+g)_{+} ) - t_+ ( (f+g)_{-} )
+    \\&=
+    t_+ ( f_+ + g_+ ) - t_+ ( f_- + f_- )
+    \\&=
+    t_+ ( f_+) - t_+ ( f_-) + t_+ ( g_+ ) - t_+ ( f_- )
+    \\&=
+    t_+ (f) + t_+ (g).
+  \end{align*}
+  Por otro lado, si \(c > 0\) las propiedes de \(\sup\) nos da que 
+  \begin{displaymath}
+    t_{+} (cf) = c t_{+} (f_{+}) - c t_{+} (f_{-})
+    = c t_{+}(f)
+  \end{displaymath}
+  y
+  \begin{align*}
+    t_{+} (-cf) 
+    &= t_{+} (c (-f)) = c t_{+}(f_{-} - f_{+})
+    \\&= c ( t_{+}(f_{-}) - t_{+}(f_{+}) )
+    = -c t_{+} (f).
+  \end{align*}
+
+  \underline{Paso 4: verificar que \(t_+\) es acotado.}
+  \begin{align*}
+    \abs{ t_{+}(f) }
+    &\le
+    \abs{t_{+}(f_{+})} + \abs{t_{+} f_{-}}
+    \\&\le
+    2 \norm{t_{+}} \norm{f}_{p}.
+  \end{align*}
+
+  \underline{Paso 5: definir \(t_{-}\).} 
+  \(t_{-} \coloneqq t_{+} - t \ge 0\).
+\end{proof}
+
+Ahora tenemos todo lo necesario para demostrar el teorema de Representación de Riesz
+para espacios \(L^p\). 
+
+\begin{Teorema}[Representación de Riesz]
+  Supongamos que \((\Omega,\mathcal{F},\mu)\) es \(\sigma\)-finito. Si \(1\le p < \infty\), entonces
+  \(\Phi\) es un isomorfismo isométrico, es decir,
+  para todo \(T\in (L^p)^{\ast}\) existe un único \(h\in L^{q}\) tal que
+  \begin{displaymath}
+    T(f) = \langle f, h \rangle \quad\forall f\in L^{p}.
+  \end{displaymath}
+\end{Teorema}
+\begin{proof}
+  La demostración la haremos para \(\K = \R\). La extensión la haremos tomando parte
+  real y imaginaria.
+
+  \underline{Paso I: \(\mu < \infty\) y \(T\in (L^p)^{\ast}\) positivo.}
+  Definamos \(\nu \colon \mathcal{F} \to [0,\infty]\) por la regla:
+  \begin{displaymath}
+    \nu( A ) = T( \1{A} ).
+  \end{displaymath}
+  Vamos a probar que \(\nu \ll \mu\) y así poder aplicar el Teorema de Radon-Nikodýn.
+  En primer lugar, hay que verificar que \(\nu\) define una medida y que esta es finita.
+  \begin{enumerate}
+    \item Como \(T\) es positivo, \(\nu \ge 0\). Por otro lado,
+    \begin{displaymath}
+      \abs{ \nu (\Omega) } 
+      =
+      \abs{ T( \1{\Omega} ) }
+      \le
+      \norm{T} \norm{\1{\Omega}}_{p}
+      =
+      \norm{T} \mu(\Omega) < \infty.
+    \end{displaymath}
+    Cambiando \(\Omega\) por un conjunto de medida nula obtenemos que 
+    \(\nu \ll \mu\). 
+
+    \item \(\nu(\emptyset) = T( 0 ) = 0\).
+
+    \item Sean \(E = \sqcup E_n\) disjuntos a pares. Luego,
+    \begin{displaymath}
+      \nu(E) = T\left( \1{E} \right).
+    \end{displaymath}
+    Notar que \(T( \sum_{n\le N} \1{E_n} )\) está dominada por \(\norm{T} \mu(\Omega)\)
+    y es creciente. Además, converge puntualmente a \(T( \1{E} )\). 
+    Así, por TCD concluimos que:
+    \begin{displaymath}
+      T\left( \1{E} ) \right)
+      =
+      T\left( \sum_{n\ge 1} \1{E_n} \right)
+      =
+      \sum_{n\ge 1} T \left( \1{E_n} \right) 
+      =
+      \sum_{n\ge 1} \nu(E_n).
+    \end{displaymath}
+    donde la igualdad de en medio es por continuidad de \(T\). 
+  \end{enumerate}
+  Luego, por R-N tenemos que existe único \(h\) tal que
+  \begin{displaymath}
+    \nu(E) = T(\1{E}) = \int \1{E} h\, d\mu.
+  \end{displaymath}
+  La igualdad que importa es la \(T\). Con esta base se sigue la
+  misma igualdad para funciones simples y por continuidad para cualquier
+  función positiva en \(L^p\). 
+
+  \underline{Paso 2: \(\mu\) \(\sigma\)-finita.}  
+  Sean \(\Omega_n \uparrow \Omega\) tal que \(\mu(\Omega_n) < \infty\). Por el paso anterior,
+  existe \(h_n\) tal que 
+  \begin{displaymath}
+    T(f \cdot \1{\Omega_n} ) 
+    = \int_{\Omega_n} f \cdot h_n \, d\mu
+    \quad
+    \forall f\ge 0 \in L^p.
+  \end{displaymath}
+  Extendamos cada \(h_n\) por \(0\) fuera de \(\Omega_n\). De esta forma,
+  \begin{displaymath}
+    \sum_{n=1}^{N} f \cdot \1{\Omega_n} \xrightarrow{L^p} f.
+  \end{displaymath}
+  Luego,
+  \begin{displaymath}
+    T(f) 
+    = T( \sum_{n\ge 1} f\cdot \1{\Omega_n})
+    = \sum_{n\ge 1} T( f\cdot \1{\Omega_n} )
+    = \sum_{n\ge 1} \int_{\Omega_n} f h_n \, d\mu.
+  \end{displaymath}
+  Tomando \(h \coloneqq \sum_{n\ge 1} h_n\), por TCM tenemos que
+  \begin{displaymath}
+    T(f) = \int f h \, d\mu.
+  \end{displaymath}
+
+  \underline{Paso 3: funciones con signo.}
+  Sea \(f\in L_{\R}^p\) y \(T\in (L^{p}_{\R})^{\ast}\) positivo. Dado que
+  \begin{displaymath}
+    T(f) = T(f_{+} - f_{-}) = T(f_{+}) - T(f_{-}),
+  \end{displaymath}
+  aplican los pasos anteriores en cada sumando. 
+
+  \underline{Paso 4: funcionales con signo.}
+  Sea \(T\in(L^p_{\R})^{\ast}\) con signo. Por la descomposición de funcionales podemos
+  escribir \(T = T_{+} - T_{-}\) y aplicar los pasos anteriores a cada sumando. Esto nos
+  deja con \(h_{\pm}\) tal que \(fh_{\pm} \in L^1\) para todo \(f\in L^p\). Basta tomar
+  \(h = h_{+}-h_{-}\) y entonces:
+  \begin{displaymath}
+    T(f) = \int fh \, d\mu = \int fh_{+}\, d\mu - \int fh_{-}\, d\mu = T_{+}(f) - T_{-}(f)
+  \end{displaymath}
+  para todo \(f\in L^p\). 
+
+  \underline{Paso 5: extender a \(\C\).} Sea \(T\in(L^p_{\C})^{\ast}\).
+  Luego, \(T = \Re{T} + i\Im(T)\). Como la parte real e imaginaria son operadores lineales acotados,
+  la composición con \(T\) también lo es. Por los pasos anteriores (aplicado a funciones reales) 
+  existen \(h_1, h_2\) tales que
+  \begin{displaymath}
+    \Re{T} = \langle \cdot, h_1 \rangle
+    \qquad
+    \Im{T} = \langle \cdot, h_2 \rangle
+  \end{displaymath}
+  Y tomando \(h = h_1 + i h_2\) tenemos que \(T = \langle \cdot, h \rangle\), de nuevo, para
+  funciones reales. En el caso de funciones complejas basta tomar parte real e imaginaria y usar
+  la linealidad de la integral.
+
+  \underline{Paso 6: verificar que \(h\in L^q\) y \(\norm{T} = \norm{h}_{q}\).}
+  La desigualdad \(\norm{T} \le \norm{h}_{q}\) siempre se cumple por Hölder:
+  \begin{displaymath}
+    \abs{T(f)} \le \int \abs{fh} \le \norm{f}_{p} \norm{h}_{q}.
+  \end{displaymath}
+  Para el converso separamos los casos \(p=1\) y el resto.
   
-\end{Demostracion}
+  \noindent\underline{Caso \(1 < p < \infty\):} Definamos \(B_n = \Omega_n \cap \left\{ \abs{h} \le n \right\} \)
+  donde \(\Omega_n \uparrow \Omega\) y tienen medida finita. Denotando \(sgn(z) = \abs{z}/z\) 
+  definamos 
+  \begin{displaymath}
+    f_n = \abs{h}^{q-1} sgn(h) \1{B_n}.
+  \end{displaymath}
+  Notar que \(f_n \in L^p\), pues \(\int f_n^p \le \int_{B_n} \abs{h}^{q} < \infty\), donde
+  la última igualdad se debe a que \(\Omega_n\) tiene medida finita y \(h\) está acotada por \(n\).
+  Escrito de otra forma:
+  \begin{displaymath}
+    \norm{f_n}_{p}^{p} \le \norm{h}_{L^q(B_n)}^q.
+  \end{displaymath}
+  Dado que
+  \begin{align*}
+    T(f_n) 
+    &= \int f_n h \, d\mu
+    \\&= \int_{B_n} \abs{h}^{q-1} sgn(h) h \, d\mu
+    \\&= \int_{B_n} \abs{h}^{q} = \norm{h}_{L^q(B_n)}^q
+  \end{align*}
+  Se tiene que \(\norm{h}_{L^q(B_n)}^{q} \le \norm{T} \norm{f_n}_{p}\), donde la
+  última desigualdad se debe a que \(T\) es un funcional. Despejando obtenemos que
+  \begin{displaymath}
+    \norm{h}_{L^{q}(B_n)} \le \norm{T},
+  \end{displaymath}
+  y tomando límite llegamos a lo buscado.
+
+  \noindent\underline{Caso \(p=1\):}
+\end{proof}
 
 \end{document}
