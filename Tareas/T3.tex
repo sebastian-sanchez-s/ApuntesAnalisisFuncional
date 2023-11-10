@@ -70,6 +70,8 @@
 
 % Shortcuts
 \newcommand{\K}{\mathbb{K}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Q}{\mathbb{Q}}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
@@ -120,7 +122,7 @@
 \begin{Solucion}
   El caso \(p = p_0\) es directo, así que supongamos que la desigualdad es estricta y 
   denotemos \(p' \coloneqq p - p_0 > 0\). Notando que \(\abs{f(x)} \le \norm{f}_{\infty}\) 
-  tenemos que
+  (c.t.p) tenemos que
   \begin{equation}
     \int \abs{f}^{p} 
     =
@@ -139,6 +141,21 @@
     \lim_{p\to\infty} \norm{f}_{p} \le \norm{f}_{\infty}
   \end{equation}
   pues \(p'/p = 1 - p_0/p \to 1\) y \(p_0/p \to 0\) cuando \(p\to \infty\).   
+
+  Para la otra dirección, consideremos \(\epsilon > 0\). Luego,
+  \begin{align*}
+    \norm{f}_{p} 
+    &= \left( \int \abs{f}^p \right)^{1/p}
+    \\&\ge
+    \left( \int_{\left\{ \abs{f} + \epsilon > \norm{f}_{\infty} \right\} } \abs{f}^{p} \right)^{1/p}
+    \\&\ge
+    \left( \int_{\left\{ \abs{f} + \epsilon > \norm{f}_{\infty} \right\} } (\norm{f}_{\infty} - \epsilon)^{p} \right)^{1/p}
+    \\&\ge
+    (\norm{f}_{\infty}-\epsilon) \mu( \left\{ \abs{f} + \epsilon > \norm{f}_{\infty} \right\} )^{1/p}.
+  \end{align*}
+  Notar que \(\mu(\left\{ \abs{f} + \epsilon > \norm{f}_{\infty} \right\}) < \infty\) pues \(f\in L^p\).
+  Tomando límite tenemos que \(\lim_{p\to\infty} \norm{f}_p \ge \norm{f}_{\infty} - \epsilon\).
+  Como \(\epsilon\) es arbitrario, se concluye el resultado. 
 \end{Solucion}
 
 % Problema 2
@@ -148,19 +165,15 @@
   que \(L^{\infty}(\R)\) no es separable. 
 \end{Problema}
 \begin{Solucion}
-  Consideremos \(f_a(x) = \sin(a x)\). Como \(-1 \le \sin \le 1\), \(f_a \in L^{\infty}\)
-  para todo \(a\). Por otro lado, \(f_a \ge \frac{\sqrt{2}}{2}\) para
-  \begin{equation}\label{p2:1}
-    x\in \frac{1}{a} \left( \frac{\pi}{2} + 2\pi k - \frac{\pi}{4}, \frac{\pi}{2} + 2\pi k + \frac{\pi}{4} \right)
-    \text{, con } \(k\in\Z\). 
-  \end{equation}
-  Similarmente, \(f_a \le - \frac{\sqrt{2}}{2}\) cuando
-  \begin{equation}\label{p2:2}
-    x\in \frac{1}{a} \left( \frac{3\pi}{2} + 2\pi k - \frac{\pi}{4}, \frac{3\pi}{2} + 2\pi k + \frac{\pi}{4} \right)
-    \text{, con } \(k\in\Z\). 
-  \end{equation}
-  Llamemos a los intervalos \(I^a\) y \(I_{a}\) de las Ecuaciones~\eqref{p2:1} y~\eqref{p2:2},
-  respectivamente.
+  Basta considerar \(f_a(x) = \chi_{[a,\infty]}(x)\). Para lo otro. Supongamos que
+  es separable. Sea \(\left\{ x_n \right\}_{n}\) un conjunto denso y numerable.
+  Fijemos \(1/4 > \epsilon > 0\). Luego, existe \(N\) tal que al menos para dos reales \(a\) y 
+  \(b\) se tiene que \(f_a, f_b \in B(x_N, \epsilon)\) (Un palomar, hay numerables
+  bolas y tenemos no-numerables elementos que disponer). De esta forma:
+  \begin{displaymath}
+    1 = \norm{f_a - f_b} \le \norm{f_a - x_N} + \norm{f_b - x_N} \le 2 \epsilon < 1
+  \end{displaymath}
+  Dada la contradicción, concluimos que \(L^{\infty}\) no puede ser separable. 
 \end{Solucion}
 
 % Problema 3
@@ -221,25 +234,268 @@
   \end{displaymath}
 
   \item
-  Usaremos el lema de Fatou con \(F_n = \abs{f_n}^p\). Como \(f_n\in L^p\), se tiene que
-  \(F_n \in L^1\), además, es evidente que \(F_n \ge 0\). Definamos
+  Sea \(x' \in (L^{p})^{\ast}\) de norma \(1\) tal que \(\abs{x'(f)} = \norm{f}_{p}\). 
+  Esto lo podemos pedir por Hahn-Banach. 
+  Por hipótesis, se cumple que \(x'(f_n) \to x'(f)\). Se sigue que:
   \begin{displaymath}
-    F = \liminf_{n\to\infty} F_n < \infty\qquad c.t.p.
+    \norm{f}_{p} 
+    = \abs{x'(f)}
+    = \abs{\lim_{n\to\infty} x'(f_n)}
+    \le \liminf_{n\to\infty} \abs{x'(f_n)}
+    \le \liminf_{n\to\infty} \norm{x'} \norm{f_n}_{p}
+    = \liminf_{n\to\infty} \norm{f_n}_{p}.
   \end{displaymath}
+
+  \item
+  Recordemos que para \(1< p < \infty\), \(L^{q} \cong (L^p)^{\ast}\). Luego,
+  \((L^{p})^{\ast}\) es separable. Tomemos \((\phi_n)_{n\in\N}\) en \((L^p)^{\ast}\) 
+  denso y numerable. Luego, \((\phi_1(f_n))_n\) define una sucesión acotada de números 
+  en el cuerpo. Se sigue que existe una subsecuencia \(f_{n,1}\) tal que
+  \(\phi_1(f_{n,1}) \to c_1 \in \K\). De manera inductiva tenemos
+  secuencias \((f_{n,k})_{n} \subset (f_{n,k-1})_n\) tal que 
+  \begin{displaymath}
+    \phi_{k}(f_{n,k}) \to c_k \in \K.
+  \end{displaymath}
+  Definamos la secuencia diagonal \(f_{n_k} = f_{n_k, n_k}\). Luego, para todo \(n\in\N\): 
+  \begin{displaymath}
+    \phi_n(f_{n_k}) \xrightarrow{n_k\to\infty} c_n \in \K.
+  \end{displaymath}
+  Definamos \(f = \lim f_{n_k}\). Notar que \(\phi_n(f_{n_k}) \to \phi_n(f)\). Sea
+  \(g\in (L^{p})^{\ast}\). Luego,
+  \begin{displaymath}
+    \abs{g(f) - g(f_{n_k})}
+    \le
+    \abs{g(f) - \phi_n(f)}
+    +
+    \abs{\phi_n(f_{n_k} - \phi_{n}(f)}
+    +
+    \abs{\phi_{n}(f_{n_k}) - g(f_{n_k})}
+    \xrightarrow{n,n_k\to\infty} 0.
+  \end{displaymath}
+\end{enumerate}
+\end{Solucion}
+
+% Problema 4
+\begin{Problema}
+\end{Problema}
+
+% Problema 5
+\begin{Problema}
+  Sea \(\mu_i,\nu_i\) medidas \(\sigma\)-finitas en \((\Omega_i, M_i)\) tales que
+  \(\nu_i \ll \mu_i\) para \(i=1,2\). Pruebe que la medida producto
+  \(\nu_1\times\nu_2 \ll \mu_1\times\mu_2\) y que la derivada de Radon-Nikodým:
+  \begin{displaymath}
+    \left[ 
+    \frac{d(\nu_1\times\nu_2)}{d(\mu_1\times\mu_2)}
+    \right]
+    =
+    \left[ \frac{d\nu_1}{d\mu_1} \right](x_1)
+    \left[ \frac{d\nu_2}{d\mu_2} \right](x_2)
+  \end{displaymath}
+\end{Problema}
+\begin{Solucion}
+  Denotemos por \(h_i \coloneqq [d\nu_i/d\mu_i]\) y por 
+  \(H = [d(\nu_1\times\nu_2)/d(\mu_1\times\mu_2)]\). Además, pongamos
+  \(\Pi_{\alpha} = \alpha_1 \times \alpha_2\).
+
+  \vspace{1em}
+  \noindent\underline{\(\Pi_{\nu} \ll \Pi_{\mu}\):} 
+  Sea \(E \in \Pi_{M}\) un medible en el producto.
+  Supongamos que \(\Pi_{\mu} (E) = 0\). Denotemos por \(E^{\bullet}, E_{\bullet}\) a las secciones
+  en \(\Omega_2\) y \(\Omega_1\), respectivamente.  
+  Luego (usando que las medidas son \(\sigma\)-finitas):
+  \begin{align*}
+    0 
+    = \Pi_{\mu}(E) 
+    &= \int_{\Omega_1} \mu_2(E^{x_1}) \, d\mu_1(x_1)
+    = \int_{\Omega_2} \mu_1(E_{x_2}) \, d\mu_2(x_2)
+    \\&\implies
+    \mu_1(E_{\bullet}) = 0 
+    \lor
+    \mu_2(E^{\bullet}) = 0 
+    \\&\implies
+    \nu_{1}(E_{\bullet}) = 0
+    \lor
+    \nu_{2}(E^{\bullet}) = 0
+    \\&\implies
+    \Pi_{\nu}(E) 
+    = \int_{\Omega_1} \nu_2(E^{x_1}) \, d\nu_1(x_1)
+    = \int_{\Omega_2} \nu_1(E_{x_2}) \, d\nu_2(x_2)
+    = 0.
+  \end{align*}
+
+  \vspace{1em}
+  \noindent\underline{\(H(x_1, x_2) = h_1(x_1) h_2(x_2)\):}
+  Para toda \(f \in L^1(\Pi_{\mu})\) se tiene:
+  \begin{equation}\label{p5:eq1}
+    \int_{\Omega_1\times\Omega_2} f \, d\Pi_{\nu}
+    =
+    \int_{\Omega_1\times\Omega_2} f H \, d\Pi_{\mu}
+  \end{equation}
+  Por otro lado: 
+  \begin{equation}\label{p5:eq2}
+  \begin{aligned}
+    \int_{\Omega_1\times\Omega_2} f \, d\Pi_{\nu}
+    &\overset{\text{fubini}}{=} 
+    \int_{\Omega_1}
+      \left( 
+       \int_{\Omega_2}
+        f
+       \, d\nu_2
+      \right)
+      \, d\nu_1
+    \\&\overset{\text{RN}}{=} 
+    \int_{\Omega_1} 
+      \left(
+        \int_{\Omega_2} 
+          f h_2(x_2)
+        \, d\mu_2(x_2) 
+      \right) 
+    \, h_1(x_1) d\mu_1(x_1)
+    \\&= 
+    \int_{\Omega_1} 
+      \left(
+        \int_{\Omega_2} f h_1(x_1) h_2(x_2)
+        \, d\mu_2(x_2)
+      \right)
+    \, d\mu_1(x_1) 
+    \\&\overset{\text{fubini}}{=} 
+    \int_{\Omega_1\times\Omega_2} f h_1(x_1) h_2(x_1) \, d\Pi_{\mu}
+  \end{aligned}
+  \end{equation}
+  Restando~\eqref{p5:eq1} y~\eqref{p5:eq2} nos da que:
+  \begin{displaymath}
+    H(x_1,x_2) = h_1(x_1) h_2(x_2) 
+    \quad\text{c.t.p. en } \Omega_1\times\Omega_2. 
+  \end{displaymath}
+\end{Solucion}
+
+% Problema 6
+\begin{Problema}
+\end{Problema}
+
+% Problema 7
+\begin{Problema}
+  Sea \(x_0(t) \in X = C([0,1])\) una función continua fija (\(\norm{x_0}_{\infty} = 1\))
+  y \(L = Gen(x_0)\). Defina \(L\) el funcional lineal:
+  \begin{displaymath}
+    f(\lambda x_0) \coloneqq \lambda.
+  \end{displaymath}
+  \begin{enumerate}[(a)]
+    \item Pruebe que \(\norm{f}_{L^{\ast}} = 1\).
+    \item
+    De acuerdo con el Teorema de Hahn-Banach, \(f\) se puede extender a un funcional lineal
+    \(F\in X^{\ast}\) con norma \(\norm{F}_{X^{\ast}} = 1\). ¿Es la extensión única en 
+    los siguientes casos?
+      \begin{itemize}[topsep=0pt]
+      \item \(x_0(t) = t\).
+      \item \(x_0(t) = 1-2t\). 
+    \end{itemize}
+  \end{enumerate}
+\end{Problema}
+\begin{Solucion}
+\begin{enumerate}[(a)]
+  \item Apliquemos la definición:
+  \begin{displaymath}
+    \norm{f}_{L^{\ast}}
+    =
+    \sup_{\norm{\lambda x_0} = 1} \abs{f(\lambda x)}
+    =
+    \sup_{\abs{\lambda} = 1}
+    \abs{\lambda}
+    = 1.
+  \end{displaymath}
+
+  \item
+  \begin{itemize}
+    \item \(Gen(x_0) = \left\{ \lambda t \colon t\in [0,1] \right\}\). El mapa \(f\) entrega
+    las pendientes de las rectas. Sea \(F\in X^{\ast}\) una extensión. Notemos que
+    \(f\) está dominada por \(x(x-2)\).  
+
+  \end{itemize}
+\end{enumerate}
+\end{Solucion}
+
+% Problema 8
+\begin{Problema}
+  Suponga que \(X\) es un espacio de Banach.
+  \begin{enumerate}[(a)]
+    \item Pruebe que \(X\) es reflexivo si y solo si \(X^{\ast}\) es reflexivo.  
+    \item Demuestre que si \(X^{\ast}\) es separable,  entonces \(X\) es separable. 
+    (Sugerencia: Para cada \(n\in\N\) , escoja \(x_n\in X\) con \(\norm{x_n} = 1\) y 
+    \(\abs{f_n(x_n)} \ge \frac{1}{2} \norm{f_n}\), donde \(f_n \in X^{\ast}\) es un subconjunto contable denso,
+    y demuestre (por contradicción) que \(Gen_{\K_{c}}(\left\{ x_n \right\}_{n}) = X\), donde 
+    \(Gen_{\K_c}(S)\) denota el conjunto de combinaciones lineales finitas de \(S\), con coeficientes en 
+    \(\K_{c} = \Q\) cuando \(\K=\R\) y \(\K_c = \Q + i \Q\) cuando \(\K = \C\). 
+    Note que la combinación de esta proposición y la Pregunta 2 muestra que, en general, 
+    \((L^{\infty})^{\ast} \not\cong L^1\).
+  \end{enumerate}
+\end{Problema}
+\begin{Solucion}
+  Denotemos \(X^{(0)} \coloneqq X\) y \(X^{(i)} \coloneqq (X^{(i-1)})^{\ast}\) para \(i>0\).   
+  \begin{enumerate}[(a)]
+    \item 
+    \framebox{\(\implies\)}: Supongamos que \(X^{(0)}\) es reflexivo. Entonces, el mapa
+    \begin{alignat*}{1}
+      J^{(0)} \colon X^{(0)} &\to X^{(2)}\\
+      x &\mapsto 
+      \begin{aligned}
+        ev_{x} \colon X^{(1)} &\to \K\\
+        x^{(1)} &\mapsto x^{(1)}(x)
+      \end{aligned}.
+    \end{alignat*}
+  es un isomorfismo isométrico. Queremos probar lo mismo para el mapa:
+  \begin{alignat*}{1}
+    J^{(1)} \colon X^{(1)} &\to X^{(3)}\\
+    x^{(1)} &\mapsto
+    \begin{aligned}
+      ev_{x^{(1)}} \colon X^{(2)} &\to \K\\
+      x^{(2)} &\mapsto x^{(2)}(x^{(1)}) 
+    \end{aligned}.
+  \end{alignat*}
+  Para esto, basta probar que es sobreyectivo. 
+
+  Dado que \(J^{(0)}\) es sobreyectivo, todo elemento \(x_0^{(2)} \in X^{(2)}\) se
+  puede escribir como \(J^{(0)}(x_0)\) para algún \(x_0 \in X\).
+  Sea \(x^{(3)} \in X^{(3)}\) se tiene que 
+  \begin{displaymath}
+    x^{(3)}(x_0^{(2)})
+    = x^{(3)} ( J^{(0)}(x_0) )
+    = (x^{(3)}\circ J^{(0)}) (x_0)
+  \end{displaymath}
+  Denotemos por \(x^{(1)} \coloneqq x^{(3)} \circ J^{(0)} \in X^{(1)}\). Luego,
+  \begin{displaymath}
+    x^{(3)}(x_0^{(2)}) = x^{(1)}(x_0) = J^{(0)}(x_0)(x^{(1)}) = x_0^{(2)}(x^{(1)}).
+  \end{displaymath}
+  Y el último término lo podemos expresar como \(J^{(1)}(x^{(1)})(x_0^{(2)})\).
+  Esto demuestra la sobreyectividad.
+  \framebox{\(\impliedby\)}: 
+
+  \item
+  Supongamos \(X^{\ast}\) separable. Consideremos la esfera unitaria en \(X^{\ast}\) 
+  \begin{displaymath}
+    S^{(1)} \coloneqq \left\{ \norm{x^{(1)}} = 1 \right\}.
+  \end{displaymath}
+  Luego, \(S^{(1)}\) también es separable. Sean \(\left\{ x^{(1)}_n \right\}_{n\in\N}\)
+  elementos densos y numerables. Asociemos, para cada \(n\), un elemento
+  \(x_n \in X\) tal que \(0 < \delta \le \abs{x^{(2)}_n (x_n)} \le 1\). Probaremos que 
+  esos \(x_n\) son densos (en el sentido del espacio generado) en \(X\). 
+  Buscando una contradicción, supongamos que no lo son. Entonces existe un \(x^{(1)}\in S^{(1)}\)
+  tal que \(x^{(1)}\) se anula en todo \(U = Gen_{\K_{c}}(\left\{ x_n \right\} )\) pero no es nulo
+  fuera de \(U\). 
+  (equivalentemente, existe un abierto en \(X\setminus U\) y podemos definir un funcional que se
+  anule en todo menos ese abierto. Reescalando lo podemos pedir unitario).
+  Por densidad en \(S^{(1)}\), existe \(N\) tal que \(\norm{x^{(1)}-x_N^{(1)}} > \delta/2\).
   Luego,
   \begin{displaymath}
-    \int F \le \liminf_{n\to\infty} \int F_n = \liminf_{n\to\infty} \norm{f_n}_{p}^{p}.
+    \delta \le \abs{x_N^{(1)}(x_N)} = \norm{x_N^{(1)}(x_N) - x^{(1)}(x_N)}
+    \le \delta/2.
   \end{displaymath}
-  Como \(\int\) es un funcional lineal acotado, la convergencia débil implica que
-  \begin{displaymath}
-    \int f_n \to \int f
-    \implies
-    \int F_n \to \int F.
-  \end{displaymath}
-  En particular, lo hace en \(\liminf\). Así, nos queda que
-  \begin{displaymath}
-    \norm{f}_{p}^{p} \le \liminf_{n\to\infty} \norm{f_n}_{p}^{p}.
-  \end{displaymath}
+  Dada la contradicción, concluimos que \(x^{(1)}\) es nulo en \(X\) y por lo tanto
+  los \(Gen_{\K_c}(\left\{ x_n \right\})\) es denso y numerable en \(X\).
+
+  La numerabilidad viene de la numerabilidad de los coeficientes y las sumas finitas del generado.
+  La densidad viene de la densidad de los coeficientes y lo que acabamos de probar.
 \end{enumerate}
 \end{Solucion}
 
