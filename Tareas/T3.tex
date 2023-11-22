@@ -7,6 +7,7 @@
 \usepackage{mathptmx} % Times New Roman
 \usepackage{amsmath,amsfonts,amsthm,amssymb}
 \usepackage{esint}
+\usepackage{bbm}
 
 % Language formatting
 \usepackage[utf8]{inputenc}
@@ -44,7 +45,7 @@
 	\refstepcounter{ProblemCounter}
   \noindent\tikz{\draw (0,0)--(\linewidth, 0) node[midway,fill=white]{{{\texttt{PROBLEMA}}~\theProblemCounter}};}
 	}{
-    \newline
+    \ \newline
     \noindent\tikz{\draw (0,0) -- (\linewidth, 0);}
 	}
 
@@ -59,8 +60,13 @@
 }
 
 % Resize abs and norm
+\newcommand\myeq[1]{\mathrel{\overset{\makebox[0pt]{\mbox{\normalfont\tiny\sffamily #1}}}{=}}}
 \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
 \DeclarePairedDelimiter{\norm}{\|}{\|}
+\DeclarePairedDelimiter\autobracket{(}{)}
+\newcommand{\br}[1]{\autobracket*{#1}}
+\newcommand{\lbr}[1]{\left\langle #1\right\rangle}
+\newcommand{\set}[1]{\left\lbrace #1\right\rbrace}
 \makeatletter
 \let\oldabs\abs
 \def\abs{\@ifstar{\oldabs}{\oldabs*}}
@@ -70,14 +76,15 @@
 
 % Shortcuts
 \newcommand{\K}{\mathbb{K}}
-\newcommand{\C}{\mathbb{C}}
 \newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\T}{\mathbb{T}}
 
 \DeclareMathOperator{\esssup}{esssup}
+\DeclareMathOperator{\Gen}{Gen}
 
 % Header
 \newcommand{\header}[1]
@@ -122,7 +129,7 @@
 \begin{Solucion}
   El caso \(p = p_0\) es directo, así que supongamos que la desigualdad es estricta y 
   denotemos \(p' \coloneqq p - p_0 > 0\). Notando que \(\abs{f(x)} \le \norm{f}_{\infty}\) 
-  (c.t.p) tenemos que
+  tenemos que
   \begin{equation}
     \int \abs{f}^{p} 
     =
@@ -140,24 +147,26 @@
   \begin{equation}
     \lim_{p\to\infty} \norm{f}_{p} \le \norm{f}_{\infty}
   \end{equation}
-  pues \(p'/p = 1 - p_0/p \to 1\) y \(p_0/p \to 0\) cuando \(p\to \infty\).   
+  pues \(p'/p = 1 - p_0/p \to 1\) y \(p_0/p \to 0\) cuando \(p\to \infty\).
 
-  Para la otra dirección, consideremos \(\epsilon > 0\). Luego,
-  \begin{align*}
+   Para la otra dirección, consideremos \(\epsilon > 0\). Luego,
+  \begin{alignat*}{2}
     \norm{f}_{p} 
     &= \left( \int \abs{f}^p \right)^{1/p}
-    \\&\ge
+    &&\ge
     \left( \int_{\left\{ \abs{f} + \epsilon > \norm{f}_{\infty} \right\} } \abs{f}^{p} \right)^{1/p}
     \\&\ge
     \left( \int_{\left\{ \abs{f} + \epsilon > \norm{f}_{\infty} \right\} } (\norm{f}_{\infty} - \epsilon)^{p} \right)^{1/p}
-    \\&\ge
+    &&\ge
     (\norm{f}_{\infty}-\epsilon) \mu( \left\{ \abs{f} + \epsilon > \norm{f}_{\infty} \right\} )^{1/p}.
-  \end{align*}
+  \end{alignat*}
   Notar que \(\mu(\left\{ \abs{f} + \epsilon > \norm{f}_{\infty} \right\}) < \infty\) pues \(f\in L^p\).
   Tomando límite tenemos que \(\lim_{p\to\infty} \norm{f}_p \ge \norm{f}_{\infty} - \epsilon\).
   Como \(\epsilon\) es arbitrario, se concluye el resultado. 
+
 \end{Solucion}
 
+\newpage
 % Problema 2
 \begin{Problema}
   Para todo \(a\in\R\) construya una función \(f_a \in L^{\infty}(\R)\) con
@@ -165,17 +174,20 @@
   que \(L^{\infty}(\R)\) no es separable. 
 \end{Problema}
 \begin{Solucion}
-  Basta considerar \(f_a(x) = \chi_{[a,\infty]}(x)\). Para lo otro. Supongamos que
-  es separable. Sea \(\left\{ x_n \right\}_{n}\) un conjunto denso y numerable.
-  Fijemos \(1/4 > \epsilon > 0\). Luego, existe \(N\) tal que al menos para dos reales \(a\) y 
-  \(b\) se tiene que \(f_a, f_b \in B(x_N, \epsilon)\) (Un palomar, hay numerables
-  bolas y tenemos no-numerables elementos que disponer). De esta forma:
+  Para cada \(a\in\R\) definamos \(f_a(x)=\mathbbm{1}_{[a,\infty)}(x)\). Claramente \(f_a\in L^\infty(\R)\) para todo \(a\in \R\). Sea \(b\neq a\in\R\). Supongamos sin perdida de generalidad que \(a<b\). Luego, \((a,b)\neq\varnothing\) y por lo tanto \((f_a-f_b)(x)=1\) para todo \(x\in (a,b)\). Concluimos que, ya que \((a,b)\) es un conjunto de medida no nula, \(\norm{f_a-f_b}_{\infty}\geq 1\).
+
+  Supongamos por contradicción que \(L^\infty(\R)\) es separable. Sea \(U:=\set{u_n}_{n\in\N}\subseteq L^\infty(\R)\) denso. Definamos \(B_a:=B_{1/2}(f_a)\subseteq L^{\infty}(\R)\). Notemos que la intersección
   \begin{displaymath}
-    1 = \norm{f_a - f_b} \le \norm{f_a - x_N} + \norm{f_b - x_N} \le 2 \epsilon < 1
+      B_a\cap U
   \end{displaymath}
-  Dada la contradicción, concluimos que \(L^{\infty}\) no puede ser separable. 
+  es no vacía para a lo más numerables valores de \(a\). Luego, el conjunto \(S:=\set{a\in \R: B_a\cap U=\varnothing}\) es no vacio. Se tiene enconces que el conjunto \(\bigcup_{a\in S}B_a\) es un conjunto abierto y luego
+  \begin{displaymath}
+      \norm{f_b-u_n}_\infty \geq \dfrac{1}{2} \;\forall b\in S, n\in\N.
+  \end{displaymath}
+  Esto contradice la densidad de \(U\), por lo que tenemos lo pedido.
 \end{Solucion}
 
+\newpage
 % Problema 3
 \begin{Problema}
   Suponga que el espacio de medida \((\Omega, M, \mu)\) es \(\sigma\)-finito. Decimos
@@ -246,7 +258,7 @@
     = \liminf_{n\to\infty} \norm{f_n}_{p}.
   \end{displaymath}
 
-  \item
+  \item 
   Recordemos que para \(1< p < \infty\), \(L^{q} \cong (L^p)^{\ast}\). Luego,
   \((L^{p})^{\ast}\) es separable. Tomemos \((\phi_n)_{n\in\N}\) en \((L^p)^{\ast}\) 
   denso y numerable. Luego, \((\phi_1(f_n))_n\) define una sucesión acotada de números 
@@ -260,25 +272,123 @@
   \begin{displaymath}
     \phi_n(f_{n_k}) \xrightarrow{n_k\to\infty} c_n \in \K.
   \end{displaymath}
-  Definamos \(f = \lim f_{n_k}\). Notar que \(\phi_n(f_{n_k}) \to \phi_n(f)\). Sea
-  \(g\in (L^{p})^{\ast}\). Luego,
+  Definamos \(f = \lim f_{n_k}\). Notar que \(\phi_n(f_{n_k}) \to \phi_n(f)\).
+  Sea \(\epsilon > 0\) y tomemos \(g\in (L^{p})^{\ast}\). Por densidad de las
+  \(\phi_n\), existe un \(N_1 > 0\) tal que:
+  \begin{displaymath}
+      \norm{\phi_N - g}_{p^{\ast}} < \frac{\epsilon}{3}.
+  \end{displaymath}
+  Por otro lado, existe \(N_1\) tal que:
+  \begin{displaymath}
+      \abs{\phi_n( f_{n_k} ) - \phi_n(f)} < \frac{\epsilon}{3}
+  \end{displaymath}
+  para \(n_k > N_1\). Tomando \(N > \max(N_0, N_1)\) nos da que:
   \begin{displaymath}
     \abs{g(f) - g(f_{n_k})}
     \le
-    \abs{g(f) - \phi_n(f)}
+    \underbrace{\abs{g(f) - \phi_n(f)}}_{\le \norm{g-\phi_n}}
     +
-    \abs{\phi_n(f_{n_k} - \phi_{n}(f)}
+    \abs{\phi_n(f_{n_k}) - \phi_{n}(f)}
     +
-    \abs{\phi_{n}(f_{n_k}) - g(f_{n_k})}
-    \xrightarrow{n,n_k\to\infty} 0.
+    \underbrace{\abs{\phi_{n}(f_{n_k}) - g(f_{n_k})}}_{\le \norm{g-\phi_n}}
+    \le
+    \epsilon.
   \end{displaymath}
+
+  \item Sea \((f_n)_{n\in\N}\subseteq L^1([0,1])\) definidas por \(f_n(t)=n\mathbbm{1}_{[0,1/n]}(t)\). Claramente, para \(n\in\N\)
+  \[\norm{f_n}_1=\int_{0}^1 \abs{f(t)}dt=\int_{0}^{1/n}\abs{n}dt=1.\]
+  Luego, \(\sup_{n\in\N}\norm{f_n}_1<\infty\).
+  Notemos que para toda \(g\in C([0,1])\subseteq L^{\infty}([0,1])\),
+  \begin{equation*}
+      \int_{0}^1 u_n(t)g(t)dt=n\int_{0}^{1/n}g(t)dx.
+  \end{equation*}
+  Como \(g\) es continua en \([0,1/n]\), este alcanza su maximo y su minimo en el intervalo. Luego,
+  \begin{align*}
+      \int_{0}^{1/n}g(t)dt\leq \dfrac{1}{n}\max_{t\in[0,1/n]}g(t);\\
+      \int_{0}^{1/n}g(t)dt\geq \dfrac{1}{n}\min_{t\in[0,1/n]}g(t),
+  \end{align*}
+  y te tendría que \(\int_{0}^1 f_n(t)g(t)dt\to g(0)\).
+  
+  Sea \((f_{n_k})_k\) una subsucesión. Supongamos por contradicción que existe \(f\in L^1([0,1])\) tal que \(f_{n_k}\rightharpoonup f\). Se debe cumplir que
+  \begin{equation*}
+      \int_{0}^1f_{n_k}(x)\varphi(t)dt \to \int_{0}^1 f(t)\varphi(t)dt
+  \end{equation*}
+  para toda \(\varphi\in L^\infty([0,1])\). Por lo anterior, si tomamos \(\psi\in C([0,1])\),
+  \begin{equation*}
+      \int_{0}^1f_{n_k}(x)\psi(t)dt \to \psi(0),
+  \end{equation*}
+  y por unicidad del limite, \(f\) cumple que \(\int_{0}^1 f(t)\psi(t)dt=\psi(0)\) para cualquier \(\psi\) continua.
+
+  Tomemos \((\psi_n)_{n\in\N}\subseteq C([0,1])\subseteq L^{\infty}([0,1])\) tales que \(\psi_n(t)=(1-t)^n\). Se tiene que \(\int_{0}^1f(t)\psi_n(t)dt=\psi_n(0)=1\) para cualquier \(n\in \N\), por lo que  \(\psi_n(0)\xrightarrow{n\to\infty} 1\). Notemos que para todo \(n\in\N\), \(\psi_n(t)\leq 1\), \(t\in [0,1]\) por lo que, como \(u\in L^1([0,1])\), por el TCD,
+  \begin{align*}
+      1&=\lim_{n\to\infty}\psi_n(0)\\
+      &=\lim_{n\to\infty}\int_{0}^1f(t)\psi_n(t)dt\\
+      &\myeq{TCD}\int_{0}^1f(t)\lim_{n\to\infty}\psi_n(t)dt.
+  \end{align*}
+  Como \(\psi_n\to \psi\), con \(\psi(t)=\mathbbm{1}_{\set{0}}(t)\) puntualmente,
+  \[\int_{0}^1f(t)\lim_{n\to\infty}\psi_n(t)dt=0\].
+  Esta contradicción demuestra que no existe tal \(f\), por lo que tenemos lo pedido.
 \end{enumerate}
 \end{Solucion}
 
+\newpage
 % Problema 4
 \begin{Problema}
+Sean \((\Omega_i, \mathcal{M}_i, \mu_i)\), \(i=1,2\) dos espacios de medida \(\sigma\)-finita y sea \(K:\Omega_1\times \Omega_2\to\K\) una función \(\mu_1\otimes \mu_2\) medible. Fije \(1\leq q\leq \infty\).
+\begin{enumerate}[(a)]
+    \item Suponga que \(K\geq 0\). Utilice la propiedad isométrica de la correspondencia entre \((L^p)^*\) y \(L^q\) para demostrar la \textit{Desigualdad integral de Minkowski}:
+    \begin{displaymath}
+        \norm{\int_{\Omega_2}K(\cdot, y)d\mu_2(y)}_{L^q(\Omega_1,\mu_1)}\leq \int_{\Omega_2}\norm{K(\cdot, y)}_{L^q(\Omega_1,\mu_1)}d\mu_2(y).
+    \end{displaymath}
+    \item Pruebe que la desigualdad se cumple también cuando \(K(\cdot, y)\in L^q(\Omega_1,\mu_1)\) para todo \(y\in\Omega_2\).
+\end{enumerate}
 \end{Problema}
+\begin{Solucion}
+\begin{enumerate}[(a)]
+  \item
+  Notemos que \(\mu_1\times\mu_2\) es \(\sigma\)-finita. 
+  Para \(p=1\) basta aplicar Tonelli. Supongamos que \(p>1\). 
+  Sea \(\Omega_{n} \uparrow \Omega_1\times\Omega_2\) tal que \(\mu_1\times\mu_2(\Omega_n) < \infty\). 
+  Sea \(\Phi\) el mapa:
+  \begin{align*}
+    \Phi\colon L^q(\Omega_1\times\Omega_2) &\to (L^p(\Omega_1\times\Omega_2))^{\ast}\\
+    g &\mapsto \langle \cdot, g \rangle
+  \end{align*}
+  donde \(g\in L^{q}(\Omega_1\times\Omega_2)\). Sabemos que \(\Phi\) es un isomorfismo isométrico
+  porque \(p\in[1,\infty)\) y \(\mu_1\times\mu_2\) es \(\sigma\)-finito.
 
+  Sea \(s_n \in \Omega_{n}\) una función simple. Notar que \(s_n \in L^{q}(\Omega_n)\) y
+  \(\int s_n(\cdot,x_2) \in L^{q}(\Omega_n^{x_1}))\). Tomemos \(g\in L^{p}(\Omega_n^{x_1}\) de norma \(1\).
+  Luego,
+  \begin{align*}
+    \abs{\Phi^{x_1}( \int s_n(\cdot,x_2) d\mu_2 )(g)}
+    &=
+    \abs{ \langle \int s_n(\cdot,x_2) , g \rangle}
+    \\&\le
+    \int_{\Omega_1} \int_{\Omega_2} \abs{ s_n(x_1,x_2) g(x_2) }
+    \\&\overset{\text{tonelli}}{=}
+    \int_{\Omega_2} \int_{\Omega_1} \abs{ s_n(x_1,x_2) g(x_2) }
+    \\&\overset{\text{hölder}}{\le}
+    \int_{\Omega_2} \norm{ s_n(\cdot, x_2) }_{q}
+  \end{align*}
+  Dado que \(\Phi\) es isometría, se tiene que
+  \begin{displaymath}
+    \norm{\Phi(\int s_n(\cdot,x_2) d\mu_2}_{p^{\ast}}
+    =
+    \norm{\int s_{n}(\cdot, x_2) d\mu_2}_{q}
+  \end{displaymath}
+  y se concluye el resultado. Dado que \(K\ge 0\) y es medible, existe una sucesión
+  de funciones simples que convergen a \(K\) monotonamente. Combinando el procedimiento
+  anterior concluimos que vale para \(K\).
+
+  \item
+  Aplicando el mapa \(\Phi\) sobre \(K\) se sigue lo pedido como se muestra arriba para
+  funciones simples. Esto ya que el mapa \(\Phi\) es isometría entre \(L^{q}\) y \((L^p)^{\ast}\)
+  y no importa el signo.
+\end{enumerate}
+\end{Solucion}
+
+\newpage
 % Problema 5
 \begin{Problema}
   Sea \(\mu_i,\nu_i\) medidas \(\sigma\)-finitas en \((\Omega_i, M_i)\) tales que
@@ -298,7 +408,7 @@
   \(H = [d(\nu_1\times\nu_2)/d(\mu_1\times\mu_2)]\). Además, pongamos
   \(\Pi_{\alpha} = \alpha_1 \times \alpha_2\).
 
-  \vspace{1em}
+    \vspace{1em}
   \noindent\underline{\(\Pi_{\nu} \ll \Pi_{\mu}\):} 
   Sea \(E \in \Pi_{M}\) un medible en el producto.
   Supongamos que \(\Pi_{\mu} (E) = 0\). Denotemos por \(E^{\bullet}, E_{\bullet}\) a las secciones
@@ -360,7 +470,7 @@
       \right)
     \, d\mu_1(x_1) 
     \\&\overset{\text{fubini}}{=} 
-    \int_{\Omega_1\times\Omega_2} f h_1(x_1) h_2(x_1) \, d\Pi_{\mu}
+    \int_{\Omega_1\times\Omega_2} f h_1(x_1) h_2(x_2) \, d\Pi_{\mu}
   \end{aligned}
   \end{equation}
   Restando~\eqref{p5:eq1} y~\eqref{p5:eq2} nos da que:
@@ -370,52 +480,72 @@
   \end{displaymath}
 \end{Solucion}
 
+\newpage
 % Problema 6
 \begin{Problema}
-\end{Problema}
-
-% Problema 7
-\begin{Problema}
-  Sea \(x_0(t) \in X = C([0,1])\) una función continua fija (\(\norm{x_0}_{\infty} = 1\))
-  y \(L = Gen(x_0)\). Defina \(L\) el funcional lineal:
-  \begin{displaymath}
-    f(\lambda x_0) \coloneqq \lambda.
-  \end{displaymath}
-  \begin{enumerate}[(a)]
-    \item Pruebe que \(\norm{f}_{L^{\ast}} = 1\).
-    \item
-    De acuerdo con el Teorema de Hahn-Banach, \(f\) se puede extender a un funcional lineal
-    \(F\in X^{\ast}\) con norma \(\norm{F}_{X^{\ast}} = 1\). ¿Es la extensión única en 
-    los siguientes casos?
-      \begin{itemize}[topsep=0pt]
-      \item \(x_0(t) = t\).
-      \item \(x_0(t) = 1-2t\). 
-    \end{itemize}
-  \end{enumerate}
+Pruebe que si \(Y\) es un espacio vectorial de dimensión finita en un espacio normado \(X\), entonces \(Y\) tiene un \textit{complemento cerrado}, i.e. existe un subespacio cerrado \(Z\) tal que \(X=Y\oplus Z\).
 \end{Problema}
 \begin{Solucion}
-\begin{enumerate}[(a)]
-  \item Apliquemos la definición:
-  \begin{displaymath}
-    \norm{f}_{L^{\ast}}
-    =
-    \sup_{\norm{\lambda x_0} = 1} \abs{f(\lambda x)}
-    =
-    \sup_{\abs{\lambda} = 1}
-    \abs{\lambda}
-    = 1.
-  \end{displaymath}
-
-  \item
-  \begin{itemize}
-    \item \(Gen(x_0) = \left\{ \lambda t \colon t\in [0,1] \right\}\). El mapa \(f\) entrega
-    las pendientes de las rectas. Sea \(F\in X^{\ast}\) una extensión. Notemos que
-    \(f\) está dominada por \(x(x-2)\).  
-
-  \end{itemize}
-\end{enumerate}
+    Sea \(e_1,\hdots,e_n\subset X\) una base de \(Y\). Podemos definir \(f_i\in Y^*\) tales que
+    \begin{displaymath}
+        f_i(e_j) = \delta_{ij}.
+    \end{displaymath}
+    Por Hahn-Banach, podemos extender cada \(f_i\) a una extensión  \(g_i\in X^*\). Definamos \(Z:=\bigcap_{i=1}^n \ker g_i\). Sea \(x\in X\). Tomemos \(y=\sum_{i=1}^{n}g_i(x)e_i\in Y\). Tenemos que para cada \(j=1,\hdots, n\),
+    \begin{displaymath}
+        g_j(y)=\sum_{i=1}^{n}g_j(e_i)g_i(x)=\sum_{i=1}^{n}f_j(e_i)g_i(x)=g_j(x),
+    \end{displaymath}
+    Por lo que \(g_j(x-y)=0\) para \(j=1,\hdots, n \Rightarrow x-y\in Z\). Como \(x\in X\) arbitrario, \(X=Y+Z\). Falta demostrar que \(Y\cap Z=\set{0}\). Esto es directo ya que si \(x\in Y\cap Z\), entonces
+    \(x=\sum_{i=1}^n \alpha_i e_i\), \(\alpha_i\in\K\). Luego, ya que \(x\in Z\), para \(j=1,\hdots,n\),
+    \begin{align*}
+        0=f_j(x)=\sum_{i=1}^{n}\alpha_if_j(e_i)=\alpha_j.\Rightarrow x=0.
+    \end{align*}
 \end{Solucion}
 
+\newpage
+% Problema 7
+\begin{Problema}
+Sea \(x_o(t)\in X=C([0,1])\) una función continua fija y sea \(L=Gen(x_0)\). Defina en \(L\) el funcional lineal
+\begin{displaymath}
+    f(x):=\lambda \quad\text{si }x=\lambda x_0.
+\end{displaymath}
+\begin{enumerate}[(a)]
+    \item Pruebe que \(\norm{f}_{L^*}=1\)
+    \item De acuerdo con el teorema de Hahn-Banach, \(f\) se puede extender a un funcional \(F\in X^*\) con norma \(\norm{F}_{X^*}=1\). Es la extensión única si
+    \begin{itemize}[\(\bullet\)]
+        \item \(x_0(t)=t\);
+        \item \(x_0(t)=1-2t\)?
+    \end{itemize}
+\end{enumerate}
+\end{Problema}
+\begin{Solucion}
+    \begin{enumerate}[(a)]
+        \item Se tiene que
+        \begin{align*}
+            \norm{f}_{L^*}&=\sup_{\norm{y}_\infty\neq 0}\dfrac{\abs{f(y)}}{\norm{y}}\\
+            &=\sup_{\lambda\neq 0}\dfrac{\abs{f(\lambda x_0)}}{\norm{\lambda x_0}_\infty}\\
+            &=\sup_{\lambda\neq 0}\dfrac{\abs{\lambda}}{\abs{\lambda}\norm{x_0}_\infty}=1.
+        \end{align*}
+        \item \begin{itemize}[\(\bullet\)]
+            \item \fbox{\(x_0(t)=t\)} Veamos que el funcional de evaluación \(\Tilde{f}(x)=x(1)\in X^*\) es el único funcional lineal que extiende \(f\). Sea \(F\in X^*\) una extensión de \(f\). Sea \(\varphi\in X\) tal que \(\varphi(t)=0\) para \(t\in[1-\delta,1]\), para algún \(\delta>0\). Veamos que \(F(\varphi)=0\). Por contradicción, supongamos sin perdida de generalidad que \(F(\varphi)>0\). Definamos \(\psi_\varepsilon(t)=t+\varepsilon\varphi(t)\) (Si \(F(\varphi)<0\), lo definimos como \(\psi_{\varepsilon}(t)=t-\varepsilon\varphi(t)\)). Para \(\varepsilon\) suficientemente pequeño, \(\norm{\psi_\varepsilon}_\infty\leq 1\), pero por linealidad,
+            \[\abs{F(\psi_\varepsilon)}=\abs{F(t)+\varepsilon F(\varphi)}>1,\]
+            lo que contradice que \(\norm{F}_{X^*}=1\).
+            
+            Veamos ahora que para \(\varphi\in X\) tales que \(\varphi(1)=0\), se cumple que \(F(\varphi)=0\). Sea \((\varphi_n)_{n\in\N}\subseteq X\) tal que \(\varphi_n\to \varphi\) uniforme, y con \(\varphi_n(t)=0\) para \(t\in[1-\delta_n,1]\). Por continuidad de \(F\),
+            \[F(\varphi)=\lim_{n\to\infty}F(\varphi_n)=0.\]
+            Finalmente, se tiene que \(F(x)=x(1)\) para todo \(x\in X\) ya que definiendo \(\varphi(t)=x(t)-x(1)t\), como \(\varphi(1)=0\),
+            \[0=F(\varphi)=F(x)-x(1)\Rightarrow F(x)=x(1).\]
+            Como \(x\in X\) arbitrario, concluimos que \(F=\Tilde{f}\), que es lo que queríamos demostrar.
+            \item \fbox{\(x_0(t)=1-2t\)} Basta notar que los funcionales de evaluación \(f_1,f_2\in X^*\) tales que \(f_1(x)=x(0)\), \(f_2(x)=-x(1)\) cumplen que para \(y=\lambda x_0\in L\),
+            \begin{align*}
+                f_1(y)&=y(0)=\lambda x_0(0)=\lambda,\\
+                f_2(y)&=-y(1)=-\lambda x_0(1)=\lambda.
+            \end{align*}
+            Además, es claro que \(\norm{f_i}_{X^*}=1\), \(i=1,2\) ya que para todo \(a\in[0,1]\), \(\abs{x(a)}\leq \norm{x}_\infty\Rightarrow \norm{f_i}_{X^*}\leq 1\) y las funciones constantes \(x_1(t)=1\), \(x_2(t)=-1\) realizan el supremo para \(f_1,f_2\), respectivamente. 
+        \end{itemize}
+    \end{enumerate}
+\end{Solucion}
+
+\newpage
 % Problema 8
 \begin{Problema}
   Suponga que \(X\) es un espacio de Banach.
@@ -469,8 +599,15 @@
   \end{displaymath}
   Y el último término lo podemos expresar como \(J^{(1)}(x^{(1)})(x_0^{(2)})\).
   Esto demuestra la sobreyectividad.
-  \framebox{\(\impliedby\)}: 
 
+  \framebox{\(\impliedby\)}: Supongamos que \(X^{(1)}\) es reflexivo. Definamos \(J^{(0)}, J^{(1)}\) de la misma manera. Supongamos por contradicción que \(J^{(0)}(X)\neq X^{(2)}\). Por Hahn-Banach, existe \(f\in X^{(3)}\) no nulo con \(f(x)\equiv 0\) para todo \(x\in J^{(0)}(X)\). Como \(X^{(1)}\) es reflexivo, el mapa \(J^{(1)}\) es un isomorfismo isometrico, por lo que existe \(g\in X^{(1)}\) con \(f=J^{(1)}(g)\). Luego, para todo \(X\in X^{(0)}\)
+  \begin{align*}
+      0&=f(J^{(0)}(x))\\
+      &=J^{(1)}(g)\br{J^{(0)}(x)}\\
+      &=J^{(0)}(x)(g)\\
+      &=g(x).
+  \end{align*}
+  Luego, \(g\equiv 0\Rightarrow f\equiv 0\), lo que es una contradicción.
   \item
   Supongamos \(X^{\ast}\) separable. Consideremos la esfera unitaria en \(X^{\ast}\) 
   \begin{displaymath}
@@ -478,10 +615,10 @@
   \end{displaymath}
   Luego, \(S^{(1)}\) también es separable. Sean \(\left\{ x^{(1)}_n \right\}_{n\in\N}\)
   elementos densos y numerables. Asociemos, para cada \(n\), un elemento
-  \(x_n \in X\) tal que \(0 < \delta \le \abs{x^{(2)}_n (x_n)} \le 1\). Probaremos que 
+  \(x_n \in X\) tal que \(0 < \delta \le \abs{x^{(1)}_n (x_n)} \le 1\). Probaremos que 
   esos \(x_n\) son densos (en el sentido del espacio generado) en \(X\). 
   Buscando una contradicción, supongamos que no lo son. Entonces existe un \(x^{(1)}\in S^{(1)}\)
-  tal que \(x^{(1)}\) se anula en todo \(U = Gen_{\K_{c}}(\left\{ x_n \right\} )\) pero no es nulo
+  tal que \(x^{(1)}\) se anula en todo \(U = \Gen_{\K_{c}}(\left\{ x_n \right\} )\) pero no es nulo
   fuera de \(U\). 
   (equivalentemente, existe un abierto en \(X\setminus U\) y podemos definir un funcional que se
   anule en todo menos ese abierto. Reescalando lo podemos pedir unitario).
@@ -492,7 +629,7 @@
     \le \delta/2.
   \end{displaymath}
   Dada la contradicción, concluimos que \(x^{(1)}\) es nulo en \(X\) y por lo tanto
-  los \(Gen_{\K_c}(\left\{ x_n \right\})\) es denso y numerable en \(X\).
+  los \(\Gen_{\K_c}(\left\{ x_n \right\})\) es denso y numerable en \(X\).
 
   La numerabilidad viene de la numerabilidad de los coeficientes y las sumas finitas del generado.
   La densidad viene de la densidad de los coeficientes y lo que acabamos de probar.
@@ -500,3 +637,4 @@
 \end{Solucion}
 
 \end{document}
+
