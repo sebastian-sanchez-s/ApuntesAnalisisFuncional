@@ -1,0 +1,386 @@
+\documentclass[11pt]{article}
+
+% Page set up
+\usepackage[margin=3cm,top=2cm]{geometry}
+
+% Document font and symbols
+\usepackage{mathptmx} % Times New Roman
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage{esint}
+
+% Language formatting
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish, es-noshorthands]{babel}
+
+% Graph and Drawings
+\usepackage{tikz,tikz-cd,float}
+\usepackage{wrapfig}
+\usetikzlibrary{babel}
+\usepackage[framemethod=default]{mdframed}
+\usepackage{framed}
+
+% Tools
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{etoolbox,mathtools}
+\usepackage[shortlabels]{enumitem}
+
+% Mdframed template
+\mdfsetup{innertopmargin=5pt,%
+	frametitlealignment=\raggedright,%
+	frametitlefont=\texttt,%
+	linewidth=2pt,%
+	topline=false,rightline=false, bottomline=false,%
+	frametitleaboveskip=\dimexpr-1\ht\strutbox\relax,}
+
+% Problem Env
+\newcounter{ProblemCounter}
+\newenvironment{Problema}[1][]{%
+	\vspace{1em}
+	\refstepcounter{ProblemCounter}
+  \noindent\tikz{\draw (0,0)--(\linewidth, 0) node[midway,fill=white]{{{\texttt{PROBLEMA}}~\theProblemCounter}};}
+	}{
+    \ \newline
+    \noindent\tikz{\draw (0,0) -- (\linewidth, 0);}
+	}
+
+% Solution Env
+\newenvironment{Solucion}[1][]
+{%
+  \newline
+	\noindent{\ttfamily SOLUCIÓN}~
+}%
+{%
+	%\hfill\(\blacksquare\)
+}
+
+% Resize abs and norm
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\|}{\|}
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
+% Shortcuts
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\T}{\mathbb{T}}
+
+\DeclareMathOperator{\esssup}{esssup}
+\DeclareMathOperator{\ran}{ran}
+
+% Header
+\newcommand{\header}[1]
+{
+\begin{minipage}{.15\textwidth}
+	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{LogoUC}
+\end{minipage}
+\hspace{1em}
+\begin{minipage}{.75\textwidth}
+	\vspace{2em}
+	{\scshape
+	Pontificia Universidad Católica de Chile\\
+	Facultad de Matemáticas\\
+	Docente: Nikola Kamburov\\
+	Ayudante: Matías Díaz
+	}
+\end{minipage}
+
+\medskip
+
+\begin{center}
+	{\textbf{MAT2555 {-} Análisis Funcional}} \\[1ex]
+	{{\large Tarea #1 {-} Omar Neyra, Sebastián Sánchez}}
+\end{center}
+
+\medskip
+}
+
+\begin{document}
+
+\header{4}
+
+% Problema 1
+\begin{Problema}
+  Sea \(1\le p \le \infty\) y sea \(\lambda = (\lambda_n)_{n\in\N}\) una sucesión acotada en \(\K\).
+  Considere el operador \(T\in B(\ell^p, \ell^p)\) definido por:
+  \begin{displaymath}
+    Tx = (\lambda_1 x_1, \lambda_2 x_2, \ldots,),
+    \qquad
+    x=(x_1,x_2,\ldots,)\in \ell^p \eqqcolon X.
+  \end{displaymath}
+  Demuestre que \(T\) es compacto si y solo si \(\lambda_n \to 0\). 
+\end{Problema}
+\begin{Solucion}
+  \framebox{\(\Rightarrow\):}
+  \underline{caso \(1\le p < \infty\):}
+  Consideremos la sucesión compuesta por \(e^{(n)} = (\delta_{in})_{i\ge 1}\) los elementos en \(\ell^p\) con 
+  todas las entradas nulas salvo la \(n\)-ésima que vale \(1\). Dado que \(e^{(n)}\) tiene norma \(1\) y 
+  \(T\) es compacto, la sucesión \((T(e^{(n)}))_{n}\) tiene una subsucesión convergente en \(\overline{T(B(0,1))}\).
+  Sea \(x\) el límite de la sucesión. Luego, para todo \(\epsilon > 0\) existe un \(N>0\)  tal que
+  (renombrando)
+  \begin{displaymath}
+    \norm{x - Te^{(n)}}_p^p
+    =
+    \sum_{i\ne n} \abs{x_i}^{p} + \abs{x_n - \lambda_n}^p
+    <
+    \epsilon
+    \quad
+    \forall n > N.
+  \end{displaymath}
+  Se sigue que \(\abs{x_n}^p < \epsilon\) para cada \(n\), es decir, \(x = 0\). En consecuencia,
+  \(\abs{\lambda_n} \to 0\). De esta forma, tenemos que la sucesión \(\lambda\) tiene una
+  subsucesión convergente a \(0\). Para extender el resultado a toda la sucesión, notamos que
+  en vez de tomar toda la sucesión \((e^{(n)})_n\), pudimos haber tomado cualquier otra subsucesión 
+  (y por lo tanto cualquier otra subsucesión de \(\lambda\)) y aplicar el mismo argumento anterior.
+  De esta manera tenemos que todas las 
+  subsucesiones de \(\lambda\) tienen una subsucesión convergente a \(0\). Esto es suficiente
+  para que toda la sucesión \(\lambda\) converja a \(0\).  
+
+  \underline{caso \(p=\infty\):}
+  Similarmente al caso anterior, dado \(\epsilon > 0\) existe una subsucesión de
+  \((Te^{(n)})_n\) tal que (renombrando) 
+  \begin{displaymath}
+    \norm{x - Te^{(n)}}_{\infty} = \sup_{i} \abs{x_i - \lambda_i \delta_{in}} < \epsilon.
+  \end{displaymath}
+  Y se tiene que \(\abs{x_i} < \epsilon\) para cada \(i\), es decir, \(x=0\). Esto implica
+  que \(\lambda_n \to 0\) y aplicamos el mismo argumento de la parte anterior para extender
+  la convergencia a toda la sucesión.
+
+  \framebox{\(\Leftarrow\):}
+  Definamos el operador \(T_n \colon X\to X\) dado por \(x\mapsto (\lambda_i x_i)_{i=1}^{n}\)
+  dejando el resto de las entradas en cero. 
+  Este operador es de rango finito y por lo tanto compacto. Probaremos que \(T_n \to T\)
+  y por lo tanto \(T\) será compacto. En efecto, tenemos que
+  \begin{displaymath}
+    \norm{Tx - T_n x}^p
+    =
+    \sum_{i\ge n+1} \abs{\lambda_i}^p \abs{x_i}^{p}
+    \le
+    \sup_{i\ge n+1} \abs{\lambda_i}^{p} \cdot \underbrace{\norm{x}^{p}}_{=1}
+    \to 0
+    \text{ cuando } n\to \infty.
+  \end{displaymath}
+
+  \underline{caso \(p=\infty\):} es análogo, solo que la desigualdad es
+  \begin{displaymath}
+    \norm{Tx - T_n x}_{\infty}
+    =
+    \sup_{i\ge n+1} \abs{\lambda_i} \underbrace{\norm{x}}_{=1}
+    \to 0
+    \text{ cuando } n\to \infty.
+  \end{displaymath}
+\end{Solucion}
+
+% Problema 2
+\newpage
+\begin{Problema}
+  Sea \(X=C([0,1])\) y defina el operador \(T\colon X \to X\) por
+  \begin{displaymath}
+    Tx(t) \coloneqq \int_{0}^{t} x(s) \, ds.
+  \end{displaymath}
+  \begin{enumerate}[(a)]
+    \item Demuestre que \(T\) es compacto.
+    \item Determine \(\sigma_{p}(T)\) y \(\sigma(T)\).
+    \item Demuestre que la ecuación \(x-Tx = f\) tiene única solución para cualquier
+      \(f\in C([0,1])\). Encuentre una fórmula para el operador \((I-T)^{-1}\). 
+  \end{enumerate}
+\end{Problema}
+\begin{Solucion}
+  Asumimos que \(X\) tiene equipada la norma \(\norm{\cdot}_{\infty}\).  
+\begin{enumerate}[(a)]
+  \item Usaremos el Teorema de Arzela-Ascoli. Llamemos \(Y = \overline{T(B(0,1)}\).
+
+    \underline{\(Y\) acotado:} Como las funciones son continuas que viven sobre un compacto, alcanzan su máximo. 
+    Luego,
+    \begin{displaymath}
+      \norm{Tx} = 
+      \sup_{t\in [0,1]} \abs{\int_0^t x(s) \, ds} 
+      \le 
+      \sup_{t\in [0,1]} \int_0^t \abs{x(s)} \, ds
+      \le
+      \sup_{t\in [0,1]} t \norm{x}
+      \le
+      \norm{x} = 1.
+    \end{displaymath}
+    Y por lo tanto \(Y\) es un conjunto acotado.
+
+    \underline{\(Y\) cerrado:} Directo porque es una clasura.
+
+    \underline{\(Y\) equicontinuo:} Sea \(\epsilon > 0\) y \(t_1\ne t_2 \in [0,1]\).
+    Luego, para cualquier \(x\in X\) se tiene que
+    \begin{displaymath}
+      \abs{Tx(t_1) - Tx(t_2)}
+      =
+      \abs{\int_{t_1}^{t_2} x(s)\, dt}
+      \le
+      \abs{t_2 - t_1} \underbrace{\norm{x}}_{=1}.
+    \end{displaymath}
+    Así que tomando \(\abs{t_2-t_1} < \epsilon\) tenemos lo pedido.
+
+    De esta forma, por el Teorema de Arzela-Ascoli el conjunto \(Y\) es compacto. 
+
+  \item Ya que \(T\) es compacto (y \(X\) es Banach), sabemos que \(0\in \sigma(T)\) y que
+    \(\sigma_{p}(T) \setminus 0 = \sigma(T) \setminus 0\). Así, solo queda determinar los
+    valores propios. Para ello, debemos resolver la ecuación:
+    \begin{displaymath}
+      Tx(t) = \int_0^t x(s)\, ds = \lambda x(t)
+      \qquad \lambda\in \K\setminus 0.
+      \tag{\(\dag\) }
+    \end{displaymath}
+    Como el lado izquierdo es diferenciable, también lo es el lado derecho. Derivando
+    ambos lados con respecto a \(t\) obtenemos:
+    \begin{displaymath}
+      x(t) = \lambda \dot x(t).
+    \end{displaymath}
+    De \((\dag)\) obtenemos que \(x(0) = 0\), así que tenemos el problema de valor inicial
+    \begin{displaymath}
+      \begin{cases}
+	\dot x &= \lambda^{-1} x\\
+	x(0) &= 0
+      \end{cases}.
+    \end{displaymath}
+    Dado que el lado derecho es continuo, la solución es única. Más aún, dado que \(x=0\)
+    lo soluciona concluimos no hay valores propios.
+
+  \item Como \(T\) es compacto y \(\ker(I-T) = 0\), por Alternativa de Fredholm tenemos
+    que \(\ran(I-T) = X\) y por lo tanto \(I-T\) es un isomorfismo. Se sigue de aquí que
+    \((I-T)x = f\) tiene solución única. 
+    Ahora, para ver la fórmula explícita expresamos la ecuación como una ecuación diferencial
+    ordinaria:
+    \begin{displaymath}
+      \dot x - x = f - x_0
+    \end{displaymath}
+    donde asumimos momentáneamente que \(f\) y \(x\) son diferenciables y notamos que \(x_0 = x(0) = f(0)\).
+    Usando factor integrante \(e^{-t}\):
+    \begin{align*}
+      \dot x e^{-t} - x e^{-t} &= e^{-t} (f-x_0)\\
+      \frac{d}{dt} (x e^{-t})  &= e^{-t} (f-x_0)\\
+      \Rightarrow
+      x e^{-t} - x_0 &= \int_{0}^{t} e^{-s} (f(s) - x_0)\, ds\\
+      x &= x_0 e^{t} + e^{t} \int_0^t e^{-s} (f(s) - x_0)\, ds
+    \end{align*}
+    Que simplificando nos da como solución:
+    \begin{displaymath}
+      x
+      = f(0) + \int_{0}^{t} e^{t-s} f(s) \, ds
+      = (I-T)^{-1}f(t).
+    \end{displaymath}
+    Notemos que la última fórmula hace sentido sin asumir que \(f\) ni \(x\) son diferenciables.
+    Veamos que efectivamente resuelven el problema. Aplicando \(T\) tenemos: 
+    \begin{alignat*}{1}
+      T (I-T)^{-1} f (t)
+      =
+      T \left( f(0) + \int_0^t e^{t-s} f(s) \,ds \right)
+      =
+      t f(0) + \int_0^t \int_0^r e^{r-s} f(s) \,ds\, dr
+    \end{alignat*}
+    Restándolo de \(I(I-T)^{-1}f(t)\) no da que:
+\end{enumerate}
+\end{Solucion}
+
+% Problema 3
+\newpage
+\begin{Problema}
+  Sea \(H\) un espacio de Hilbert complejo.
+  \begin{enumerate}[(a)]
+    \item Demuestre que si \(U\colon H \to H\) es un operador unitario, entonces \(\sigma(U) \subset 
+      \left\{ \lambda\in\C \colon \abs{\lambda} = 1 \right\}. \)  
+    \item Sea \(T\in B(H,H)\) con adjunto \(T^{\ast}\). Pruebe que \(\lambda \in \sigma(T)\) si y solo
+      si su conjungado \(\overline\lambda \in \sigma(T^{\ast})\). 
+  \end{enumerate}
+\end{Problema}
+\begin{Solucion}
+\begin{enumerate}[(a)]
+  \item Como \(U\) es unitario, \(\norm{U} = \sup_{\norm{x}=1} \norm{Ux} = 1\) y sabemos que
+    \(\lambda\in \sigma(U)\) satisface que \(\abs{\lambda} \le \norm{U} = 1\). Por lo tanto, 
+    solo queda probar la otra desigualdad. Sea \(\lambda \in \sigma(U)\) y supongamos
+    que \(\abs{\lambda} < 1\). 
+    Luego, el operador \(U-\lambda I\) no es invertible. Sin embargo, dado que tiene
+    inversa \(U^{-1}\) continua de norma \(1\), podemos reescribir el operador anterior:
+    \begin{displaymath}
+      U - \lambda I
+      =
+      U^{-1} (I - \lambda U^{-1})
+    \end{displaymath}
+    Y vemos que es un producto (composición) de operadores invertibles, pues \(U^{-1}\) es invertible
+    y \(I-\lambda U^{-1}\) es invertible (por series de Neumann). Esto da una contradicción y por lo
+    tanto \(\lambda = 1\). 
+
+  \item Sea \(\lambda \in \sigma(T)\). Luego, \(T-\lambda I\) no es invertible.
+    Tenemos 2 posibles casos, (1) o bien \(T-\lambda\) no es inyectivo o
+    (2) lo es pero no es sobreyectivo.
+
+    (1) Si no es inyectivo, \(\ker(T-\lambda I) \ne 0\) y por las relaciones de ortogonalidad,
+    \(\ran(T^{\ast} - \overline\lambda I)^{\perp} \ne 0\). Lo último dice que \(T^{\ast}-\overline\lambda\)
+    no es sobreyectivo, así que no es invertible. Por lo tanto \(\overline\lambda\in\sigma(T^{\ast})\).
+
+    (2) Si es inyectivo pero no es sobreyectivo, \(\ran(T-\lambda I) \subsetneq H\).
+    Si la imagen no es densa, se tiene que \(\ran(T-\lambda I)^{\perp} \ne 0\) y aplica
+    el argumento de (1). Si la imagen es densa, XD
+\end{enumerate}
+\end{Solucion}
+
+% Problema 4
+\newpage
+\begin{Problema}
+  Sea \(H\) un espacio de Hilbert complejo.
+  \begin{enumerate}[(a)]
+    \item
+      Suponga que \(A_1\) y \(A_2\) son dos operadores autoadjuntos compactos que conmutan.
+      Demuestre que existe una base ortonormal de \(H\) que consta de vectores propios
+      tanto para \(A_1\) como para \(A_2\).  
+    \item (\textit{Descomposición espectral de operadores normales compactos})
+      Un operador \(T\in B(H,H)\) se llama \textit{normal} si \(TT^{\ast} = T^{\ast} T\).
+      Demuestre que si \(T\) es normal y compacto, entonces \(H\) posee una base ortonormal
+      de vectores propios de \(T\).
+
+      \textit{Sugerencia:} Escriba \(T = A_1 + A_2 i\) donde \(A_1\) y \(A_2\) son como en la parte
+      (a) y utilice eso para concluir.
+  \end{enumerate}
+\end{Problema}
+\begin{Solucion}
+\begin{enumerate}[(a)]
+  \item Como \(A_1\) es autoadjunto y compacto, por el Teorema Espectral 
+    existe una base ortonormal numerable de vectores propios. Sea \(\lambda\)
+    un valor propio de \(A_1\) y \(v\in \ker(A_1 -\lambda)\). Dado que
+    \begin{displaymath}
+      A_1 A_2 v = A_2 A_1 v = A_2 \lambda v = \lambda A_2 v
+    \end{displaymath}
+    vemos que \(A_2 v\) también es vector propio de \(A_1\) asociado a \(\lambda\).
+    Dado que \(A_2\) tiene las mismas propiedades que \(A_1\), podemos encontrar
+    un vector propio de \(A_2\), \(u\in\ker(A_1 - \lambda)\). De esta forma, \(u\)
+    es un vector propio de \(A_1\) y \(A_2\).
+    Inductivamente podemos hacer este procedimiento para \(\lambda_1, \lambda_2,\ldots\)
+    valores propios de \(A_1\), construyendo vectores \(u_1, u_2, \ldots\) y normalizando 
+    obtendremos que son base ortonormal, donde la ortonormalidad y la base vienen de que 
+    cada \(u_i\) vive en \(\ker(A_1-\lambda_i)\) que son espacios ortogonales y cubren todo.   
+
+  \item Consideremos \(A_1 = (T+T^{\ast})/2\) y \(A_2 = (T-T^{\ast})/2i\). Se verifica que ambos
+    son compactos y autoadjuntos. Además,
+    \begin{align*}
+      A_1 A_2 
+      &= 
+      \frac{TT - TT^{\ast} + T^{\ast} T - T^{\ast} T^{\ast}}{4i}
+      \\&=
+      \frac{TT - T^{\ast}T + T T^{\ast} - T^{\ast} T^{\ast}}{4i}
+      \\&=
+      \frac{(T - T^{\ast})T + (T - T^{\ast}) T^{\ast}}{4i}
+      =
+      A_2 A_1.
+    \end{align*}
+    Así, por la parte (a) existe una base ortonormal de vectores propios tanto de \(A_1\) como
+    de \(A_2\) y por lo tanto de \(T\).
+\end{enumerate} 
+\end{Solucion}
+\end{document}

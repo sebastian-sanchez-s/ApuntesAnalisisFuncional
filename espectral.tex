@@ -1,0 +1,237 @@
+\documentclass{article}
+
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{enumitem} 
+
+\usepackage{bbm}
+
+\newtheorem{Teorema}{Teorema}
+\newtheorem{Lema}{Lema}
+\newtheorem{Proposicion}{Proposición}
+\newtheorem{Corolario}{Corolario}
+
+\theoremstyle{plain}
+\newtheorem{Problema}{Problema}
+
+\theoremstyle{definition}
+\newtheorem{Definicion}{Definición}
+
+\newcommand{\1}[1]{\mathbbm{1}\left( #1 \right)}
+
+\newcommand{\T}{\mathbb{T}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\K}{\mathbb{K}}
+
+\DeclareMathOperator{\esssup}{esssup}
+\DeclareMathOperator{\rank}{rank}
+
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\newcommand{\normL}[2]{\lVert #2 \rVert_{L^#1}}
+
+\begin{document}
+
+\noindent\tikz{
+\draw (0,0)--(\linewidth, 0) 
+node[midway,above,fill=white]{\Large Operadores Compactos y Teoría Espectral.};}
+\newline
+
+
+Denotamos por \(B^X\) a la bola cerrada de un espacio normado \(X\).  
+
+\begin{Definicion}[Operador Compacto]
+  Sean \(X\) e \(Y\) espacios de Banach. Decimos que \(T\in B(X,Y)\) es compacto
+  si \(\overline{T(B^X)}\) es compacto en \(Y\). Denotamos por 
+  \(B_c(X,Y)\) a la colección de operadores compactos. 
+\end{Definicion}
+
+\begin{Proposicion}
+  \(B_c(X,Y)\) es un espacio de Banach.
+\end{Proposicion}
+\begin{proof}
+  Basta probar que es cerrado en \(B(X,Y)\). Sean \((T_n)\in B_c(X,Y)\) tal
+  que \(T_n \to T \in B(X,Y)\). Debemos probar que \(T\in B_c(X,Y)\).
+  Recordar que en espacios métricos, tenemos la equivalencia
+  \begin{displaymath}
+    \text{compacidad} \iff \text{secuencialmente compacto}.
+  \end{displaymath}
+  Por lo tanto, probaremos que toda sucesión en \(\overline{T(B^X))}\)
+  tiene una subsucesión convergente.
+
+  Sea \(\epsilon > 0\). 
+  Por la convergencia \(T_n \to T\), existe \(N>0\) tal que
+  \begin{displaymath}
+    \norm{T - T_N} < \frac{\epsilon}{2}.
+  \end{displaymath}
+  Luego, por la compacidad de \(T_N\), existen \(y_1, \ldots, y_k\) tal que
+  \begin{displaymath}
+    \overline{T_N(B^X)} = \bigcup B(y_i, \epsilon/2). 
+  \end{displaymath}
+  Se sigue que \(T(B^X) \subset \bigcup B(y_i, \epsilon)\). 
+  Sea \((x_n)_n\) una sucesión en \(B^X\). Luego, una subsucesión
+  que está contenida en alguna de las finitas bolas. Vale decir,
+  existe \(z_1 \in \lbrace y_i \rbrace\) tal que 
+  \begin{displaymath}
+    T(x_{n,1}) \subset B(z_1, \epsilon).
+  \end{displaymath}
+  De esta subsucesión podemos tomar otra tal que \(T(x_{n,2}) \subset B(z_2, \epsilon/2)\), donde
+  \(z_2\) sale de cubrir la bola \(B(z_1,\epsilon)\) y elegir alguna que tenga infinitos miembros
+  de la sucesión. Inductivamente, tendremos sucesiones
+  \begin{displaymath}
+    T(x_{n,k}) \subset B(z_k, \epsilon/k).
+  \end{displaymath}
+  y tomando \(\bar x_n = x_{n,n}\) concluimos que \(T(\bar x_n)\) es convergente y por lo tanto
+  \(T\) es secuencialmente compacto.
+\end{proof}
+
+\begin{Definicion}[Operador de Rango Finito]
+  Un operador \(T\colon X\to Y\) se dice de rango finito si \(\rank T\) tiene dimensión finita.
+\end{Definicion}
+
+\begin{Proposicion}
+  Todo operador de rango finito es compacto.
+\end{Proposicion}
+\begin{proof}
+  Sea \(T\) de rango finito y \(n = \dim \rank T\). Luego, \(\rank T \cong \K^n\) 
+  bajo el isomorfismo
+  \begin{alignat*}{1}
+    \phi \colon \K^n &\to \rank T\\
+    (a_1, \ldots, a_n) &\mapsto \sum a_i e_i
+  \end{alignat*}
+  donde \((e_i)_{i=1}^n\) es base de \(\rank T\). 
+  Luego, \(\phi^{-1}\) es isomorfismo continuo y por lo tanto
+  \(\phi^{-1}(\overline{T(B^X)})\) es cerrada y acotada en \(\K^n\). 
+  Por Heine-Borel \(\phi^{-1}(\overline{T(B^X)})\) es compacto
+  y aplicando \(\phi\) tenemos que \(\overline{T(B^X)}\) es compacto. 
+\end{proof}
+
+\begin{Teorema}
+  Sea \(X\) Banach y \(Y\) Hilbert. Si \(T\in B_c(X,Y)\), entonces existe una sucesión
+  \((T_n)_n\) de operadores de rango finito tal que \(T_n \to T\).  
+\end{Teorema}
+\begin{proof}
+  Sea \(\epsilon>0\). Por compacidad, existen \(y_1, \ldots, y_k\) tal que 
+  \(\overline{T(B^X)} \subset \bigcup B(y_i, \epsilon)\). 
+  Definamos \(F\coloneqq Gen(y_1, \ldots, y_k)\) que es cerrado en \(Y\). Luego,
+  existe la proyección ortogonal a \(F\), \(P\colon Y \to Y\). Definamos
+  el mapa \(T_{\epsilon} = P \circ T\), que es de rango finito y por lo tanto
+  compacto. Luego, si \(x\in B^{X}\) tiene imagen \(Tx \in B(y_i, \epsilon)\),
+  \(\norm{Tx - y_i} \le \epsilon\), se tiene que
+  \begin{displaymath}
+    \norm{ P(Tx) - P(y_i)} \le \norm{Tx - y_i} \le \epsilon.
+  \end{displaymath}
+  Así, para cualquier \(x\in B^X\), se cumple que
+  \begin{displaymath}
+    \norm{Tx - T_{\epsilon}x}
+    \le
+    \norm{Tx - y_j} + \norm{y_j - T_{\epsilon}x}
+    \le
+    2 \epsilon
+  \end{displaymath}
+  donde \(y_j\) es tal que \(Tx \in B(y_j,\epsilon)\).  
+\end{proof}
+
+\noindent\textbf{Ejemplo: Operadores de Hilbert-Schmidt:}~%
+Consideremos dos espacios medibles \(X_i = (\Omega_i, S_i, \mu_i)\) y \(K(x,y)\)
+en \(L^2_{\R}(X_1\times X_2)\). Suponga que \(L^2(X_i)\) es separable. Mostraremos que el mapa
+\begin{displaymath}
+  T_K f(x) \coloneqq
+  \int_{\Omega_2} K(x_1, x_2) f(x_2) \, d\mu_2(x_2),
+\end{displaymath}
+donde \(f\in L^2(X_2)\) es compacto. En primer lugar, veamos que es un operador
+lineal acotado de \(L^2(X_2) \to L^2(X_1)\). La linealidad sale de la linealidad de 
+la integral. Por otro lado
+\begin{align*}
+  \abs{T_K f(x)}^2
+  &\le
+  \int_{\Omega_2} \abs{K(x_1,x_2)} \abs{f(x_2)} \,d\mu_2(x_2)
+  \\&\le
+  \int_{\Omega_2} \abs{K(x_1,x_2)}^2\, d\mu_{2}(x_2)
+  \int_{\Omega_2} \abs{f(x_2)}^2 \, d\mu_{2}(x_2)
+  \\&\le
+  \norm{K}^2_{L^2(X_1\times X_2)}
+  \norm{f}_{L^2(X_2)}
+  \le \infty.
+\end{align*}
+Así que \(T_K f \in L^2(X_1)\) y \(T_K\) es un operador acotado.  
+Ahora veamos que es compacto. Sea \((e^i_n)_n\) una base ortonormal de \(L^2(X_i)\) y 
+definamos \(e_{n,m}(x_1,x_2) = e^{1}_n(x_1) e^2_n(x_2)\). Afirmamos que \(e_{n,m}\)
+es una base ortonormal de \(L^2(X_1\times X_2)\). 
+
+\begin{Proposicion}
+  \(S\circ T\) es compacto si \(S\colon Y \to Z\) es continuo y \(T\colon X \to Y\) es compacto o viceversa.
+\end{Proposicion}
+\begin{proof}
+  Supongamos que \(S\) es continuo y \(T\) es compacto. Debemos probar que
+  \(S\circ T\) es compacto. Sea \((x_n)_n\) una sucesión en \(B^X\). Luego,
+  existe una sucesión \(x_{n_k}\) tal que \(T x_{n_k} \to y\). 
+  Por continuidad de \(S\) se tiene que \(S(T x_{n_k}) \to S(y)\).
+
+  Supongamos que \(S\) es compacto y \(T\) es continuo. Sea \((x_n)_{n}\) una sucesión
+  en \(B^{X}\). Luego, \(Tx_n\) es una sucesión en \(Y\) y \(y_n \coloneqq Tx_n/\norm{T}\)
+  es una sucesión en \(B^{Y}\). Como \(S\) es compacto, existe una subsucesión
+  \(y_{n_k}\) tal que \(S y_{n_k}/ \to z\). Es decir,
+  \(S(T x_{n_k}) \to z\norm{T}\), donde \(T x_{n_k} = y_{n_k} \norm{T}\).
+\end{proof}
+
+\begin{Teorema}[Schauder]
+  \begin{displaymath}
+    T\in B_c(X,Y) \iff T^{\ast} \in B_c(Y^{\ast}, X^{\ast}).
+  \end{displaymath}
+\end{Teorema}
+
+\section*{La teoría de Riesz-Fredholm}
+
+\begin{Teorema}[Alternativa de Fredholm]
+  Sea \(X\) Banach y \(T\in B_c(X,X)\).  Entonces el operador \(I-T\colon X \to X\) satisface:
+  \begin{enumerate}
+    \item \(\ker(I-T)\) tiene dimensión finita.
+    \item \(\rank(I-T)\) es cerrado en \(X\) y \(\rank(I-T) = \ker(I-T^{\ast})^{\perp}\).
+    \item \(\ker(I-T) = (0) \iff \rank(I-T) = X\).
+    \item \(\dim \ker (I-T) = \dim \ker(I-T^{\ast})\). 
+  \end{enumerate}
+\end{Teorema}
+
+Antes de probar el teorema, necesitamos el siguiente resultado.
+\begin{Lema}[Riesz]
+  Si \(X\) es un espacio normado y \(F\subset X\) es cerrado y propio, entonces 
+  para todo \(\epsilon > 0\) existe \(u\in X\) unitario tal que \(d(u,F) \ge 1-\epsilon\).   
+\end{Lema}
+\begin{proof}
+  Sea \(v\in X \setminus F\). Luego, \(d(v,F) > 0\) y por lo tanto existe \(v_0\in F\)
+  tal que \(d(v,F) \le \norm{v-v_0} \le \frac{d(v,F)}{1-\epsilon}\). 
+  Sea \(u\coloneqq \frac{v-v_0}{\norm{v-v_0}}\). Luego,
+  \begin{displaymath}
+    \norm{u-f}
+    =
+    \frac{1}{\norm{v-v_0}}
+    \norm{v-\underbrace{(v_0+f\norm{v-v_0})}_{\in F}}
+    \ge 1-\epsilon
+  \end{displaymath}
+\end{proof}
+
+\begin{Corolario}
+  Si en un espacio normado \(X\), la bola \(B^X\) es compacta, entonces \(X\) tiene dimensión finita.  
+\end{Corolario}
+\begin{proof}
+  Supongamos que \(X\) tiene dimensión infinita. Sea \((u_n)_n\) una sucesión de vectores unitarios
+  y consideremos \(F_{n} = Gen(u_1, \dots, u_n)\) de tal forma que \(d(u_{n+1}, F_n) > 1/2\).
+  Notar que \(F_{n} \subset F_{n+1}\) y en particular para \(m>n\) se tiene que 
+  \(\norm{u_n - u_m} > 1/2\). Por lo tanto, no puede haber una subsucesión convergente. 
+\end{proof}
+
+\begin{proof}[Demostración Alternativa de Fredholm]
+\begin{itemize}
+  \item Notar que \(\ker(I-T)\) es un subespacio cerrado de \(X\). Luego,
+  \(T\mid_{\ker(I-T)}\) es compacto y 
+\end{itemize}
+\end{proof}
+
+\end{document}
